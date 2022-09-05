@@ -1,0 +1,53 @@
+#svgWithFilter{
+    position: absolute;
+    width: 0;
+    height: 0;
+}
+
+
+li{
+    padding: 5px;
+    border-radius: 5px;
+    text-align: center;
+}
+.trashIcon{
+    z-index: 5;
+    position: absolute;
+    top: 3vh;
+    right: 3vh;
+}
+li:hover{
+    background-color: rgb(240, 238, 238);
+
+}
+.app{
+    text-align: center;
+    font-family: 'Yuji Boku';
+    min-height: 100vh;
+    // background-image: url(./uncharted_poster.jpg);
+    background-color: rgb(111, 111, 111);
+
+
+    .container{
+        display: flex;
+    }
+    .row{
+        justify-content: center;
+    }
+
+    .title{
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+
+    .userControls{
+        display: flex;
+        flex-direction: column;
+        border-radius: 4px;
+        padding: 5px;
+        cursor: pointer;
+        position: absolute;
+        top: 40px;
+        left: 40px;
+    }
+}

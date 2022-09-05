@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css?family=Pirata+One|Bilbo+Swash+Caps&display=swap');
+
+@font-face {
+  font-family: Morris;
+  src: url(https://cdn.statically.io/gh/EmmesCodes/Tipografias/dae9f5bb/MorrisInitials.ttf);
+  }
+
+:root {
+  --fontSize: calc((1vw + 1vh) * .75);
+}
+
+*, *:before, *:after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+	height: 100%;
+}
+
+body {
+  font: var(--fontSize)/200% 'Bilbo Swash Caps', cursive;
+ 
+  background-size: cover;
+}
+
+main {
+  postion: relative;
+  width: 100%;
+  height: auto;
+}
+
+/* WARNING ! This solution seems to not work on all navigators.
+This problem was reported to me on :
+https://stackoverflow.com/questions/14585101/old-paper-background-texture-with-just-css/
+
+August 2021 : ok on Chrome v92+, Firefox v90+, Edge v92+
+*/
+
+.parchment {
+  /* center page with absolute position */
+	box-shadow: 2px 3px 20px black, 0 0 125px #8f5922 inset;
+	background: #fffef0;
+  /* v2.1 : borders effect with SVG : try to play with scale to change them */
+  filter: url(#wavy2);
+  /* v2.2 : Noise added for a vellum paper effect */ 
+  
+}
+
+main p {
+  font-size: 2.25em;
+  color: #7F3300;
+  margin-top: .75em;
+  text-align: justify;
+}
+
+
+
+
+
+
+

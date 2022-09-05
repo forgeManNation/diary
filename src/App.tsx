@@ -1,60 +1,43 @@
-import React from 'react'
-import Page from "./components/page/Page"
-import "./app.scss"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faUser} from '@fortawesome/free-solid-svg-icons'
+import React, {useState} from 'react'
+import Diary from './components/Diary';
+import { BrowserRouter, Link, Routes, Route} from "react-router-dom";
+import Login from "./auth/Login"
+import Register from "./auth/Register"
+import { User } from 'firebase/auth';
 const App = () => {
 
-//Setting our host URL as a constant for easy reference
-const URL = "http://localhost:3000"
-//We will probably not talk much about options this article, but here is an example one
-// options = {
-//       method: "GET",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify({ dataKey1: dataValue1, dataKey2: dataValue2 }),
-//     };
+  const [user, setuser] = useState<User | null>(null)
+  const [loggedIn, setloggedIn] = useState(false)
+  const [editModeOn, seteditModeOn] = useState(false)
 
-//This is the actual series of functions for a fetch request. 
-//However, the above options and URL are just examples of possible text
-//This series of code would actually be inneffective in practice 
-//so we are focusing on the structure rather than specific content.
-fetch('http://localhost:3000/mytest')
-.then(response=>(response.json()))
-.then(json=>(console.log(json)))
+  function changeEditMode(changeEditModeToOn : boolean){
+    seteditModeOn(changeEditModeToOn)
+  }
 
-
-fetch('http://localhost:3000/mytest', {
-  method: 'POST',
-  headers: {
-    'Accept': 'application/json, text/plain, */*',
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({text: 'Some string: sidvm'})
-}).then(res => res.json())
-  .then(res => console.log(res));
-
+  function changeUser(user : User | null){
+    setuser(user)
+  }
 
   return (
-    <div className='app'>
-        <h1 className='title'>Diary of smiling pirate</h1>
-        <p className='user'>
-            <FontAwesomeIcon icon={faUser} />
-            <i className='fa-solid fa-user'></i>
-            &nbsp;
-          pfiffierfnreiofnvbhdblhljhb
-        </p>
-        <div className='container'>
-            <div className='row'>
-                <Page/>
-                <Page/>
-                <Page/>
-                <Page/>
-            </div>
-        </div>
-    </div>
-    
+    <BrowserRouter>
+   
+      {
+        user ? 
+      <Routes>
+      <Route path="/" element={<Diary user = {user} changeUser = {changeUser} changeEditMode = {changeEditMode} editMode = {false}  />} />
+      <Route path="edit" element={<Diary user = {user} changeUser = {changeUser} changeEditMode = {changeEditMode} editMode = {true} />} />
+      </Routes>
+    :
+    <Routes>
+    <Route path= "login" element={<Login changeUser ={changeUser}  />} />
+    <Route path="register" element={<Register changeUser ={changeUser} />} />
+    <Route path = "/*" element={<Login changeUser={changeUser} />} />
 
+    </Routes>
+      }
 
+   
+    </BrowserRouter>
   )
 }
 

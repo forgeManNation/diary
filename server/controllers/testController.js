@@ -7,8 +7,15 @@ const getTestPerson = asyncHandler(async (req, res) => {
 });
 
 const postTestPerson = asyncHandler(async (req, res) => {
-    const testPersons = await User.insertMany({text: "hahaaaaa"})
-    res.status(200).json(testPersons)
+
+    console.warn(req.body.text, ";|)GOOD");
+
+    let whatToSend = "hahaaaaa"
+
+    whatToSend =  req.body.text ? req.body.text : whatToSend; 
+
+    const testPersons = await User.create({text: whatToSend})
+     res.status(200);
 });
 
 
