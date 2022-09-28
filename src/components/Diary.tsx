@@ -2,7 +2,7 @@ import React from 'react'
 import Page from "./page/Page"
 import "./diary.scss"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faPencil} from '@fortawesome/free-solid-svg-icons'
+import {faPen} from '@fortawesome/free-solid-svg-icons'
 import {useState, useEffect} from "react"
 import {db, getDoc, setDoc, doc} from "../firebase"
 import {Alert} from 'reactstrap'
@@ -12,12 +12,10 @@ import UserControls from "./userControls/UserControls"
 
 interface Props  {
   editMode:  boolean,
-  changeEditMode: (changeEditModeToOn: boolean) => void,
-  changeUser: (user: User | null) => void,
   user: User,
 }
 
-const Diary = ({editMode, changeEditMode, changeUser, user} : Props) => {
+const Diary = ({editMode, user} : Props) => {
 
 const [diaryPages, setdiaryPages] = useState <page[]>([])
 const [diaryName, setdiaryName] = useState("Diary of smiling pirate")
@@ -36,15 +34,19 @@ useEffect(() => {
   //iniitial load of data from database
 async function getDataFromDb() {
   try {
-    const docRef = doc(db, "users", "forge");
-    const docSnap = await getDoc(docRef)
 
-    //the retrieved data
-    let diaryDataFromDatabase = docSnap.data();
-  
-    if(diaryDataFromDatabase){
-    setdiaryName(diaryDataFromDatabase.diary_name)
-    setdiaryPages(diaryDataFromDatabase.diary_pages)
+    
+    if(user.displayName !== null){
+      const docRef = doc(db, "users", user.displayName);
+      const docSnap = await getDoc(docRef)
+
+      //the retrieved data
+      let diaryDataFromDatabase = docSnap.data();
+    
+      if(diaryDataFromDatabase){
+      setdiaryName(diaryDataFromDatabase.diary_name)
+      setdiaryPages(diaryDataFromDatabase.diary_pages)
+      }
     }
 
   } catch (error) {
@@ -58,8 +60,10 @@ async function getDataFromDb() {
 
 async function saveToDb() {
   if(user.displayName){
+    console.log(user.displayName, 'display name');
+    
     const docRef = doc(db, "users", user.displayName);
-    await setDoc(docRef, {diary_name: diaryName, username: "updated_forge", diary_pages: diaryPages})
+    await setDoc(docRef, {diary_name: diaryName, username: user.displayName, diary_pages: diaryPages})
     }
 }
 
@@ -109,6 +113,7 @@ function triggerWrongUserPicUrlAlert () {
 
 function changePageValue(pageName : string, pagePerex : string, pageContent : string, index :number) {
   let diaryPagesCopy = [...diaryPages]
+  pageName = "JUCHUUUU :)"
   diaryPagesCopy[index] = {page_name: pageName, page_perex: pagePerex, page_content: pageContent, creation_date: {seconds: 100, nanoseconds: 544}, index, editMode: false}
   setdiaryPages(diaryPagesCopy)
 }
@@ -125,28 +130,32 @@ interface page {
 
   return (
     <div className='app'>
+      
     {/* filter used for making Page edges rougher*/}
       <svg id='svgWithFilter'>
         <filter id="wavy2">
-          <feTurbulence x="0" y="0" baseFrequency="0.02" numOctaves="5" seed="1" />
-          <feDisplacementMap in="SourceGraphic" scale="20" />
+          <feTurbulence x="0" y="0" baseFrequency="0.03" numOctaves="10" seed="3" />
+          <feDisplacementMap in="SourceGraphic" scale="15" />
         </filter>
       </svg>
 
         <h1 className='title'>{diaryName}</h1>
         {/* Buttons on the upper right */}
-        <UserControls triggerWrongUserPicUrlAlert = {triggerWrongUserPicUrlAlert} triggerChangeProfileAlert = {triggerChangeProfileAlert} changeUser={changeUser} editMode = {editMode} user =  {user} changeEditMode = {changeEditMode}
-        triggerSave = {triggerSave}  ></UserControls>
+        <UserControls triggerWrongUserPicUrlAlert = {triggerWrongUserPicUrlAlert} triggerChangeProfileAlert = {triggerChangeProfileAlert} editMode = {editMode} user =  {user}
+        triggerSave = {triggerSave} ></UserControls>
 
         <div className='container'>
             <div className='row'>
               {diaryPages.map((page : page, index) => 
                 <Page deletePage={deletePage} editMode = {editMode} page_creation_timestamp = {page.creation_date } page_name = {page.page_name} page_content = {page.page_content} page_perex = {page.page_perex} 
-                 page_newly_added = {page.page_newly_added} index = {index} changePageValue = {changePageValue}/>)
+                 page_newly_added = {page.page_newly_added} key = {index + page.page_name} index = {index} changePageValue = {changePageValue}/>)
               }
-              <div onClick={createNewDiaryPage} className='col-xs-6 col-sm-4 col-md-3 col-lg-2 d-flex  align-items-center justify-content-center align-center'>
-            {editMode ? <FontAwesomeIcon size='2x'  icon={faPencil} /> : <></>}
+             {editMode ?
+              <div onClick={createNewDiaryPage} className='addNewPageButtonContainer col-xs-6 col-sm-4 col-md-4 col-lg-3  d-flex  align-items-center justify-content-center align-center '>
+             <div role= 'button' className='addNewPageButton'><FontAwesomeIcon size='2x'  icon={faPen} /></div>
             </div>
+            : <></>
+            }
             </div>
         </div>
 

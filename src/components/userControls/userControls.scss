@@ -1,0 +1,18 @@
+#editButton{
+    margin-left: 0vh;
+}
+#saveButton{
+    margin-left: 1vh;
+}
+
+.userControls{
+
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px;
+    padding: 5px;
+    cursor: pointer;
+    bottom: 65px;
+    left: 55px;
+}

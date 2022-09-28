@@ -10,7 +10,11 @@ import {
 } from "firebase/firestore"
 
 import { getAuth, createUserWithEmailAndPassword,
-   signInWithEmailAndPassword, updateProfile, signOut} from "firebase/auth";
+                  signInWithEmailAndPassword,
+                  updateProfile,
+                  signOut,
+                  onAuthStateChanged
+                } from "firebase/auth";
 
 
 const firebaseConfig = {

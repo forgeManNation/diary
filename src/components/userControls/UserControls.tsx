@@ -1,6 +1,6 @@
 import React, { SyntheticEvent } from 'react'
 import {Popover, Tooltip, PopoverBody} from "reactstrap"
-import {faUser, faPencil, faFilePen,  faImage, faCog, faBookReader, faCheck, faXmark, faFloppyDisk} from '@fortawesome/free-solid-svg-icons'
+import {faUser, faFilePen,  faImage, faCog, faBookReader, faCheck, faXmark, faFloppyDisk} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { User } from 'firebase/auth'
 import {signOut, auth, updateProfile} from "../../firebase"
@@ -9,16 +9,14 @@ import "./userControls.scss"
 
 
 interface Props {
-    editMode: boolean,
-  changeUser: (user: User | null) => void,
+  editMode: boolean,
   user: User,
-  changeEditMode: (changeEditModeToOn: boolean) => void,
   triggerSave: () => void,
   triggerChangeProfileAlert: () => void
   triggerWrongUserPicUrlAlert: () => void
 }
 
-const UserControls = ({editMode, changeUser, user, changeEditMode, triggerSave, triggerChangeProfileAlert, triggerWrongUserPicUrlAlert}: Props) => {
+const UserControls = ({editMode, user, triggerSave, triggerChangeProfileAlert, triggerWrongUserPicUrlAlert}: Props) => {
 
   const [userTooltipOpen, setuserTooltipOpen] = React.useState(false)
   const [editTooltipOpen, seteditTooltipOpen] = React.useState(false)
@@ -55,28 +53,28 @@ function onProfilePicUrlChange (e : SyntheticEvent) {
 }
 
   function changeEditModeOn() {
+    
     if(editMode){
-    changeEditMode(true)
-    navigate(`/`);
+    navigate('/');
     }
     else{
-    changeEditMode(false)
-      navigate('/edit')
+    navigate('/edit')
     }
   }
 
 
   return (
     <div className='userControls'>
+        <span id = "userIcon">
         {user.photoURL ?
-        <img src={user.photoURL} style = {{borderRadius: "25px"}}  id = "userIcon" width = "40px" height="40px" alt="user"/>
+        <img src={user.photoURL} style = {{borderRadius: "25px"}} width = "40px" height="40px" alt="user"/>
         :
-        <FontAwesomeIcon id = "userIcon" icon={faUser} />
-        }
-      <Popover placement="bottom" isOpen={userTooltipOpen} trigger = "hover" target="userIcon" toggle={() => setuserTooltipOpen(!userTooltipOpen)} >
+        <FontAwesomeIcon icon={faUser} />
+        }&nbsp;&nbsp;{user.displayName}</span>
+      <Popover placement="bottom"  isOpen={userTooltipOpen} trigger = "hover" target="userIcon" toggle={() => setuserTooltipOpen(!userTooltipOpen)} >
       <PopoverBody>
-          <ul className='list-unstyled '>
-            <li role="button" onClick={() => {signOut(auth); changeUser(null); }}>log off&nbsp;&nbsp;<FontAwesomeIcon icon={faUser} /></li>
+          <ul className='list-unstyled m-0 '>
+            <li role="button" onClick={() => {signOut(auth)}}>log off&nbsp;&nbsp;<FontAwesomeIcon icon={faUser} /></li>
             <li role= "button" >
               <span onClick={() => {setchangeProfilePictureInputOn(!changeProfilePictureInputOn)}}>change profile picture&nbsp;&nbsp;<FontAwesomeIcon icon={faImage} /></span>
               &nbsp;&nbsp;{changeProfilePictureInputOn ? 
@@ -90,33 +88,37 @@ function onProfilePicUrlChange (e : SyntheticEvent) {
               :
               <></>} 
             </li>
-            <li role="button" >settings&nbsp;&nbsp;<FontAwesomeIcon icon={faCog} /></li>
             </ul>
+      
           </PopoverBody>
     </Popover>
 
     &nbsp;
     &nbsp;
 
-    <span onClick={changeEditModeOn}>
-        <FontAwesomeIcon ref={editIconRef} size = "2x"  icon={editMode ? faBookReader : faPencil} />
+    <div id='editButton' onClick={changeEditModeOn}>
+        <FontAwesomeIcon ref={editIconRef} size = "lg"  icon={editMode ? faBookReader : faFilePen} />&nbsp; Edit
         <Tooltip placement="bottom" isOpen={editTooltipOpen} target={editIconRef} toggle={() => seteditTooltipOpen(!editTooltipOpen)}>
               {editMode ? "turn edit mode off" : "turn edit mode on"} 
         </Tooltip>
-    </span>
+    </div>
 
     &nbsp;
     &nbsp;
 
     {editMode ? 
     <>
-    <div role="button" onClick={triggerSave}>
-      <FontAwesomeIcon size='2x' ref = {saveIconRef} icon={faFloppyDisk} /></div>
+    <div role="button" id = "saveButton" onClick={triggerSave}>
+      <FontAwesomeIcon size='lg' ref = {saveIconRef} icon={faFloppyDisk} />&nbsp; Save</div>
       <Tooltip placement="bottom" isOpen={saveTooltipOpen} target={saveIconRef} toggle={() => setsaveTooltipOpen(!saveTooltipOpen)}>
               save progress
         </Tooltip>
       </>
-        : <></>}
+      : <></>}
+
+    
+
+
 </div>
   )
 }

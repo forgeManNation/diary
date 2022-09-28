@@ -5,21 +5,27 @@ import { useNavigate } from 'react-router-dom'
 import {auth, signInWithEmailAndPassword} from '../firebase'
 
 interface Props{
-    changeUser: (user: User) => void
+    // changeUser: (user: User) => void
 }
 
-const Login = ({changeUser}: Props) => {
+const Login = ({}: Props) => {
 
   let navigate = useNavigate()
 
   const [email, setemail] = useState("")
   const [password, setpassword] = useState("")
 
+  //sign in to firebase than change the high order User object with retrieved data
+  //TODO: add functionality fow when the login fails
     async function logIn (){
+
+
         await signInWithEmailAndPassword(auth, email, password).then(
+          
+
             userAuth => {
-                // console.log("I am logging the retrieve user auth :)))))", userAuth, userAuth.user.photoURL);
-                changeUser(userAuth.user)
+              console.log("succesfully logged in");
+              
             }
         )
     }
@@ -27,7 +33,7 @@ const Login = ({changeUser}: Props) => {
   return (
     <div className='w-full  d-flex justify-content-center align-content-center flex-wrap authBg'>
     <div className='mainAuthContainer   bg-light  p-5 pt-3'>
-    <h3 className='pb-2'>Sign in to <br/><strong>My dear diary...</strong></h3>
+    <h3 className='pb-2'>Sign in to <br/><strong>travellers diary</strong></h3>
   <div className="mb-3">
     <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
     <input type="email" value={email} onChange = {(e) => {setemail(e.target.value)}} className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"/>

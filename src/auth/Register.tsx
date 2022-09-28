@@ -6,13 +6,11 @@ import {faPersonCircleQuestion  } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { User } from 'firebase/auth';
 
-
-// changeUser(userAuth.user)
 interface Props{
-  changeUser: (user: User) => void
+  // changeUser: (user: User) => void
 }
 
-const Register = ({changeUser}: Props) => {
+const Register = ({}: Props) => {
 
   const [email, setemail] = React.useState("")
   const [password, setpassword] = React.useState("")
@@ -34,7 +32,9 @@ const Register = ({changeUser}: Props) => {
   
   //signing the user in after succesful registration
   await signInWithEmailAndPassword(auth, email,password).then(userAuth => {
-    changeUser(userAuth.user)
+    console.log('succesfully logged in mate :) good job');
+    
+    // changeUser(userAuth.user)
   })
     }
     catch(err){
@@ -49,7 +49,7 @@ const Register = ({changeUser}: Props) => {
   return (
     <div className='w-full  d-flex justify-content-center align-content-center flex-wrap authBg'>
         <div className='bg-light  p-5 pt-3'  >
-        <h3 className='pb-2'>Register in to<br/><strong>My dear diary...</strong></h3>
+        <h3 className='pb-2'>Register in to<br/><strong>travellers diary</strong></h3>
       <div className="mb-3">
         <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
         <input type="email" value={email} onChange = {(e) => {setemail(e.target.value)}} className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"/>

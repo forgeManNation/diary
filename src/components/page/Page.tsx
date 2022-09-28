@@ -5,8 +5,9 @@
     import { faAngleLeft, faTrash} from '@fortawesome/free-solid-svg-icons'
     import { EditText, EditTextarea } from 'react-edit-text';
     import 'react-edit-text/dist/index.css';
-
-
+    import GeolocationSegment from "./geolocation/GeolocationSegment"
+    import DateSegment from './DateSegment'
+    import PaperTest from "./PaperTest"
 
 
 interface pageProps {
@@ -65,8 +66,13 @@ const pageLarge  = <div onClick={zoomPage} className = " pageLargeBackground">
         }
         </h3>
       <div className = "editableText" >
-        {props.editMode ? <EditTextarea rows={15} onChange={(e) => {setpageContent(e.target.value)}} value={pageContent} /> : pageContent}
+        <div className='editableTextArea'>
+          {props.editMode ? <EditTextarea rows={15} onChange={(e) => {setpageContent(e.target.value)}} value={pageContent} /> : pageContent}
         </div>
+      </div>
+      {/* uncomment after continuing to work on page */}
+      {/* <GeolocationSegment></GeolocationSegment>
+      <DateSegment></DateSegment> */}
       <p onClick={zoomPage} className='returnButton'><FontAwesomeIcon icon={faAngleLeft} /> return</p>
     </div>
   </div>
@@ -89,6 +95,7 @@ const pageBasic = <div onClick={zoomPage} className='col-xs-6 col-sm-5 col-md-4 
   return (
     <>   
     { pageZoomed ? pageLarge : pageBasic}
+    {/* <PaperTest></PaperTest> */}
     </>
   )
 }
