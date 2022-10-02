@@ -7,16 +7,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { User } from 'firebase/auth';
 
 interface Props{
+  authErrors: {[key: string]: string}
   // changeUser: (user: User) => void
 }
 
-const Register = ({}: Props) => {
+const Register = ({authErrors}: Props) => {
 
   const [email, setemail] = React.useState("")
   const [password, setpassword] = React.useState("")
   const [name, setname] = React.useState("")
   const [profilePicUrl, setprofilePicUrl] = React.useState("")
-  const [authError, setauthError] = React.useState("")
+  const [errorMessage, seterrorMessage] = React.useState("")
 
   let navigate = useNavigate()
 
@@ -33,22 +34,26 @@ const Register = ({}: Props) => {
   //signing the user in after succesful registration
   await signInWithEmailAndPassword(auth, email,password).then(userAuth => {
     console.log('succesfully logged in mate :) good job');
-    
-    // changeUser(userAuth.user)
   })
     }
     catch(err){
 
-      let strippedErr = err.message.match(/\(([^)]+)\)/)[1]
-      setauthError(strippedErr + ", try again")
+      //slicing the message to part which authErrors object has as key
+      let splicedFireAuthMessage = err.message.substring(err.message.indexOf("/") + 1, err.message.indexOf(")"))
+          
+      //getting error rewritten for user 
+      let userMessage = authErrors[splicedFireAuthMessage]
       
+      seterrorMessage(userMessage)
+
+
     }
 }
 
 
   return (
     <div className='w-full  d-flex justify-content-center align-content-center flex-wrap authBg'>
-        <div className='bg-light  p-5 pt-3'  >
+        <div className=' bg-light p-5 pt-4 pb-0'  >
         <h3 className='pb-2'>Register in to<br/><strong>travellers diary</strong></h3>
       <div className="mb-3">
         <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
@@ -70,9 +75,10 @@ const Register = ({}: Props) => {
       
       <p>have an account already? <span onClick={() => {navigate("../", { replace: true })}} role="button" className='text-primary'>Log in</span> instead</p>
 
-      <button  onClick={register} className="btn btn-outline-dark">Register</button>
-      <button className='btn btn-link text-dark'><FontAwesomeIcon  icon={faPersonCircleQuestion} />&nbsp;&nbsp;try it out as a guest! </button>
-      <p className='text-danger'>{authError}</p>
+      <button  onClick={register} className="btn btn-outline-dark w-10">Register</button>
+      &nbsp;&nbsp;
+      <button className='btn text-dark'>guest login</button>
+      <p className='text-danger'>{errorMessage}</p>
     </div>
 </div>
   )

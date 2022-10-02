@@ -1,59 +1,33 @@
-import React, { SyntheticEvent } from 'react'
-import {Popover, Tooltip, PopoverBody} from "reactstrap"
-import {faUser, faFilePen,  faImage, faCog, faBookReader, faCheck, faXmark, faFloppyDisk} from '@fortawesome/free-solid-svg-icons'
+import React from "react"
+import {Tooltip} from "reactstrap"
+import {faFilePen, faFloppyDisk, faBookReader, faChevronLeft, faChevronRight, faCancel, faPen, faTrash} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { User } from 'firebase/auth'
-import {signOut, auth, updateProfile} from "../../firebase"
 import { useNavigate } from 'react-router-dom'
 import "./userControls.scss"
 
 
 interface Props {
   editMode: boolean,
-  user: User,
   triggerSave: () => void,
-  triggerChangeProfileAlert: () => void
-  triggerWrongUserPicUrlAlert: () => void
+  triggerDelete: () => void,
+  createNewPage: () => void,
+  activePageIndex: number,
+  diaryPagesLength: number,
+  changePage: (numToChangeIndex: number) => void
 }
 
-const UserControls = ({editMode, user, triggerSave, triggerChangeProfileAlert, triggerWrongUserPicUrlAlert}: Props) => {
+const UserControls = ({editMode, triggerSave, triggerDelete, activePageIndex, diaryPagesLength, changePage, createNewPage}: Props) => {
 
-  const [userTooltipOpen, setuserTooltipOpen] = React.useState(false)
   const [editTooltipOpen, seteditTooltipOpen] = React.useState(false)
   const editIconRef = React.useRef(null)
   const [saveTooltipOpen, setsaveTooltipOpen] = React.useState(false)
   const saveIconRef = React.useRef(null)
-  const [profilePicInputValue, setprofilePicInputValue] = React.useState("")
+  const [disabledChevronTooltipOpen, setdisabledChevronTooltipOpen] = React.useState(false)
+  const [disabledChevronRightTooltipOpen, setdisabledChevronRightTooltipOpen] = React.useState(false)
   const navigate = useNavigate();
-
-  const [changeProfilePictureInputOn, setchangeProfilePictureInputOn] = React.useState(false)
-
-
-async function triggerChangeProfile (){
-
-  //check whether inputed url is valid
-  const res = await fetch(profilePicInputValue);
-  const buff = await res.blob();
-  const validUrl =  buff.type.startsWith('image/')
-
-  if(validUrl){
-  await updateProfile(user, {'displayName': user.displayName, 
-  'photoURL': profilePicInputValue} ); 
-  setchangeProfilePictureInputOn(false)
-  triggerChangeProfileAlert()
-  }
-  else{
-    triggerWrongUserPicUrlAlert()
-  }
-}
-
-
-function onProfilePicUrlChange (e : SyntheticEvent) {
-  e.preventDefault()
-}
+  const disabledChevronRightRef = React.useRef(null)
 
   function changeEditModeOn() {
-    
     if(editMode){
     navigate('/');
     }
@@ -62,63 +36,85 @@ function onProfilePicUrlChange (e : SyntheticEvent) {
     }
   }
 
-
+  
   return (
-    <div className='userControls'>
-        <span id = "userIcon">
-        {user.photoURL ?
-        <img src={user.photoURL} style = {{borderRadius: "25px"}} width = "40px" height="40px" alt="user"/>
-        :
-        <FontAwesomeIcon icon={faUser} />
-        }&nbsp;&nbsp;{user.displayName}</span>
-      <Popover placement="bottom"  isOpen={userTooltipOpen} trigger = "hover" target="userIcon" toggle={() => setuserTooltipOpen(!userTooltipOpen)} >
-      <PopoverBody>
-          <ul className='list-unstyled m-0 '>
-            <li role="button" onClick={() => {signOut(auth)}}>log off&nbsp;&nbsp;<FontAwesomeIcon icon={faUser} /></li>
-            <li role= "button" >
-              <span onClick={() => {setchangeProfilePictureInputOn(!changeProfilePictureInputOn)}}>change profile picture&nbsp;&nbsp;<FontAwesomeIcon icon={faImage} /></span>
-              &nbsp;&nbsp;{changeProfilePictureInputOn ? 
-              <>
-              <input onClick={onProfilePicUrlChange} value = {profilePicInputValue} onChange = {e => {setprofilePicInputValue(e.target.value)}} placeholder = "add url to profile picture"></input>
-              &nbsp;&nbsp;
-              <FontAwesomeIcon onClick={triggerChangeProfile} id = "userIcon" icon={faCheck} />
-              &nbsp;&nbsp;
-              <FontAwesomeIcon onClick={() => {setchangeProfilePictureInputOn(false)}} id = "userIcon" icon={faXmark} />
-              </>
-              :
-              <></>} 
-            </li>
-            </ul>
-      
-          </PopoverBody>
-    </Popover>
+    <div className="userControls">
 
-    &nbsp;
-    &nbsp;
+    <div className='userControlsRow'>
 
-    <div id='editButton' onClick={changeEditModeOn}>
-        <FontAwesomeIcon ref={editIconRef} size = "lg"  icon={editMode ? faBookReader : faFilePen} />&nbsp; Edit
-        <Tooltip placement="bottom" isOpen={editTooltipOpen} target={editIconRef} toggle={() => seteditTooltipOpen(!editTooltipOpen)}>
-              {editMode ? "turn edit mode off" : "turn edit mode on"} 
-        </Tooltip>
-    </div>
-
-    &nbsp;
-    &nbsp;
-
-    {editMode ? 
+    {activePageIndex !== 0 
+    ? 
+    <FontAwesomeIcon role="button" onClick={() => {changePage(-1)}} size = "lg"  icon={faChevronLeft} />  
+    :
     <>
-    <div role="button" id = "saveButton" onClick={triggerSave}>
-      <FontAwesomeIcon size='lg' ref = {saveIconRef} icon={faFloppyDisk} />&nbsp; Save</div>
-      <Tooltip placement="bottom" isOpen={saveTooltipOpen} target={saveIconRef} toggle={() => setsaveTooltipOpen(!saveTooltipOpen)}>
-              save progress
+    <div id="disabledChevronLeft"><FontAwesomeIcon role="button" color="gray" size = "lg"  icon={faChevronLeft} /></div>
+    <Tooltip placement="bottom" isOpen={disabledChevronTooltipOpen} target="disabledChevronLeft" toggle={() => setdisabledChevronTooltipOpen(!disabledChevronTooltipOpen)}>
+    You are on the first page already. 
+    </Tooltip>
+    </>
+    }
+
+    &nbsp;
+    &nbsp;
+
+    {activePageIndex + 1} / {diaryPagesLength}
+
+    &nbsp;
+    &nbsp;
+
+    {activePageIndex !== diaryPagesLength - 1
+    ? 
+    <FontAwesomeIcon onClick={() => changePage(1)} role="button"  size = "lg"  icon={faChevronRight} />  
+    :
+    <>
+    <div onClick = {createNewPage} ref= {disabledChevronRightRef}><FontAwesomeIcon role="button" size = "lg"  icon={faPen} /></div>
+    <Tooltip placement="bottom" isOpen={disabledChevronRightTooltipOpen}  target={disabledChevronRightRef} toggle={() => setdisabledChevronRightTooltipOpen(!disabledChevronRightTooltipOpen)}>
+    Create new notebook page. 
+    </Tooltip>
+    </>
+    }
+
+    </div>
+    &nbsp;
+    &nbsp;
+    <div className="userControlsRow">
+
+        {editMode ?
+        <>
+        <div className = 'stopEditButton' onClick={changeEditModeOn}>
+        <span role="button" ><FontAwesomeIcon  size = "lg"  icon={faBookReader} />&nbsp; Stop editing</span>
+      
+        </div>
+        
+        &nbsp;
+        &nbsp;
+
+        
+        <div role="button" id = "saveButton" onClick={triggerSave}>
+        <FontAwesomeIcon size='lg' ref = {saveIconRef} icon={faFloppyDisk} />&nbsp; Save</div>
+        <Tooltip placement="bottom" isOpen={saveTooltipOpen} target={saveIconRef} toggle={() => setsaveTooltipOpen(!saveTooltipOpen)}>
+                save progress
+          </Tooltip>
+
+
+        &nbsp;
+        &nbsp;
+
+        <div role="button" id = "saveButton" onClick={triggerDelete}>
+        <FontAwesomeIcon size='lg' ref = {saveIconRef} icon={faTrash} />&nbsp; Delete</div>
+        <Tooltip placement="bottom" isOpen={saveTooltipOpen} target={saveIconRef} toggle={() => setsaveTooltipOpen(!saveTooltipOpen)}>
+                delete page
         </Tooltip>
-      </>
-      : <></>}
-
-    
-
-
+        </>
+        :
+        <div className ='editButton' onClick={changeEditModeOn}>
+        <FontAwesomeIcon role="button" ref={editIconRef} size = "lg"  icon={faPen} />
+        <Tooltip placement="bottom" isOpen={editTooltipOpen} target={editIconRef} toggle={() => seteditTooltipOpen(!editTooltipOpen)}>
+          turn edit mode on
+        </Tooltip>
+        </div>
+        }
+    </div>
 </div>
   )
 }

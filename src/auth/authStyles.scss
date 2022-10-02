@@ -6,4 +6,21 @@
     background-size: cover;
     min-height: 100vh;
 }
+// .mainAuthContainer{
+//     width: calc(70vh);
+// }
 
+.errMessageContainer{
+    position: relative;
+    padding: 3vh;
+}
+
+.errorMessage{
+    color: #d13531;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+}
