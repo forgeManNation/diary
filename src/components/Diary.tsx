@@ -2,12 +2,13 @@ import React, { useRef, useState, useEffect} from 'react'
 import Page from "./page/Page"
 import "./diary.scss"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faPen} from '@fortawesome/free-solid-svg-icons'
+import {faPen, faSpinner} from '@fortawesome/free-solid-svg-icons'
 import {db, getDoc, setDoc, doc} from "../firebase"
 import {Alert} from 'reactstrap'
 import { User } from 'firebase/auth'
 import UserControls from "./userControls/UserControls"
 import UserIconWithPopover from "./userControls/UserIconWithPopover"
+
 
 interface Props  {
   editMode:  boolean,
@@ -16,22 +17,17 @@ interface Props  {
 
 const Diary = ({editMode, user} : Props) => {
 
-const diaryPages = useRef<page[]>([])
+const diary_pages = useRef<page[]>([])
 const [diaryName, setdiaryName] = useState("Diary of smiling pirate")
-const [successAlertOpen, setsuccessAlertOpen] = useState(false)
+const [successfullSaveAlertOpen, setsuccessfullSaveAlertOpen] = useState(false)
 const [successProfilePictureAlertOpen, setsuccessProfilePictureAlertOpen] = useState(false)
 const [wrongUserPicAlertOpen, setwrongUserPicAlertOpen] = useState(false)
 const [activePageIndex, setactivePageIndex] = useState(0)
 const [newPageAlertOpen, setnewPageAlertOpen] = useState(false)
 
-function deletePage(index:number) {
-
-  diaryPages.current.splice(index, 1)
-
-}
-
+//initial load of data from database
 useEffect(() => {
-  //iniitial load of data from database
+  //initial load of data from database
 async function getDataFromDb() {
   try {
 
@@ -40,12 +36,55 @@ async function getDataFromDb() {
       const docRef = doc(db, "users", user.displayName);
       const docSnap = await getDoc(docRef)
 
-      //the retrieved data
-      let diaryDataFromDatabase = docSnap.data();
+      console.log(user.displayName, "fockin jojoooooooo");
+      
 
-      if(diaryDataFromDatabase){
-      setdiaryName(diaryDataFromDatabase.diary_name)
-      diaryPages.current = diaryDataFromDatabase.diary_pages
+      if(docSnap.exists()){
+
+          //the retrieved data
+          let diaryDataFromDatabase = docSnap.data();
+
+          console.log('i exist and data got');
+          
+
+          if(diaryDataFromDatabase){
+            console.log("diaryDataFromDatabase exists :) :P", diaryDataFromDatabase.diary_pages, diaryDataFromDatabase);
+            
+
+          setdiaryName(diaryDataFromDatabase.diaryName)
+          diary_pages.current = diaryDataFromDatabase.diary_pages
+          }
+          else{
+            console.log("what the fuck why");
+            
+          }
+      }
+      else{
+        
+          await setDoc(docRef, {
+            diaryName: user.displayName + "'s diary",
+            diary_pages: [
+              {editMode: false,
+               index: 0,
+               page_content: "This is new diary page"
+              }
+            ],
+            username: user.displayName
+          });
+
+          const docSnap = await getDoc(docRef)
+
+          //the retrieved data
+          let diaryDataFromDatabase = docSnap.data();
+
+          if(diaryDataFromDatabase){
+          setdiaryName(diaryDataFromDatabase.diary_name)
+          diary_pages.current = diaryDataFromDatabase.diary_pages
+          }
+          else{
+            console.log("what the fuck why");
+            
+          }
       }
     }
 
@@ -57,13 +96,11 @@ async function getDataFromDb() {
 
 }, [])
 
-
 async function saveToDb() {
   if(user.displayName){
-    console.log(user.displayName, diaryPages, "ooo [powerful diary pagES", 'display name');
-
     const docRef = doc(db, "users", user.displayName);
-    await setDoc(docRef, {diary_name: diaryName, username: user.displayName, diary_pages: diaryPages.current})
+
+    await setDoc(docRef, {diaryName: diaryName, username: user.displayName, diary_pages: diary_pages.current})
     }
 }
 
@@ -76,18 +113,18 @@ async function triggerSave() {
   await saveToDb()
 
   //displaying success alert
-  setsuccessAlertOpen(true)
+  setsuccessfullSaveAlertOpen(true)
   saveToDbtimerID = setTimeout(function () {
-        setsuccessAlertOpen(false)
+        setsuccessfullSaveAlertOpen(false)
 }, 5000);
   }
 
-async function triggerDelete(){
-  if (diaryPages.current.length > 1 && window.confirm('Are you sure you want to delete this diary page?')) {
+async function deletePage(){
+  if (diary_pages.current.length > 1 && window.confirm('Are you sure you want to delete this diary page?')) {
 
-  // let diaryPagesCopy = [...diaryPages]
-  diaryPages.current.splice(activePageIndex, 1)
-  // setdiaryPages(diaryPagesCopy)
+  // let diary_pagesCopy = [...diary_pages]
+  diary_pages.current.splice(activePageIndex, 1)
+  // setdiary_pages(diary_pagesCopy)
   await saveToDb()
 
   if(activePageIndex !== 0) changePage(-1)
@@ -95,7 +132,7 @@ async function triggerDelete(){
 
 
   }
-  else if(diaryPages.current.length <= 1){
+  else if(diary_pages.current.length <= 1){
     window.alert("You can't delete the only page")
   }
 }
@@ -104,15 +141,11 @@ async function triggerDelete(){
 let createNewDiaryPagetimerID : ReturnType<typeof setTimeout>;
 
 async function createNewDiaryPage() {
-
   //clearing timeout of alert display when the another new page is created too early from the previous saving
   clearTimeout(createNewDiaryPagetimerID)
 
-
-  // setdiaryPages([...diaryPages, ])
-
-  diaryPages.current.push({page_content: "New page content", index: diaryPages.current.length, editMode: false
-})
+  diary_pages.current.push({page_content: "New page content", index: diary_pages.current.length, editMode: false
+  })
   
   await saveToDb()
   changePage(+1)
@@ -121,8 +154,6 @@ async function createNewDiaryPage() {
   saveToDbtimerID = setTimeout(function () {
     setnewPageAlertOpen(false)
 }, 5000);
-
-
   }
 
 //timer ID -> used for clearing timeout when the data are saved to early
@@ -147,7 +178,7 @@ function triggerWrongUserPicUrlAlert () {
 }
 
 function changePageValue(pageContent : string, index :number) {
-  diaryPages.current[index] = {page_content: pageContent, index, editMode: false}
+  diary_pages.current[index] = {page_content: pageContent, index, editMode: false}
 }
 
 function changePage (numToChangeIndex: number){
@@ -161,29 +192,27 @@ interface page {
   editMode: boolean
 }
 
-  const openPage = diaryPages.current[activePageIndex]
+  const openPage = diary_pages.current[activePageIndex]
 
+
+  console.log(diary_pages.current, activePageIndex, "ONLY GET ONE SHOT");
+  
 
   return (
     <div className='app'>
-
         <h1 className='title'>{diaryName}</h1>
         <UserIconWithPopover triggerWrongUserPicUrlAlert = {triggerWrongUserPicUrlAlert} triggerChangeProfileAlert = {triggerChangeProfileAlert}
         user =  {user} ></UserIconWithPopover>
 
-        {diaryPages.current[activePageIndex] !== undefined ? <Page deletePage={deletePage} editMode = {editMode} page_content = {openPage.page_content}
+        {diary_pages.current[activePageIndex] !== undefined ? <Page  editMode = {editMode} page_content = {openPage.page_content}
              key = {"page" + openPage.index} index = {activePageIndex} changePageValue = {changePageValue}/>
         :
-        <></>
+        <FontAwesomeIcon className = "spinningIcon" role="button" color="black" size = "lg"  icon={faSpinner} />
         }
-
-
-        <UserControls triggerDelete = {triggerDelete} createNewPage = {createNewDiaryPage} changePage={changePage} diaryPagesLength={diaryPages.current.length} activePageIndex = {activePageIndex} editMode = {editMode} triggerSave = {triggerSave} ></UserControls>
-
-
+        <UserControls deletePage = {deletePage} createNewPage = {createNewDiaryPage} changePage={changePage} diary_pagesLength={diary_pages.current.length} activePageIndex = {activePageIndex} editMode = {editMode} triggerSave = {triggerSave} ></UserControls>
 
       <div className='alertBox'>
-      <Alert className='alert' isOpen = {successAlertOpen} toggle = {() => {setsuccessAlertOpen(false)}} color="success">
+      <Alert className='alert' isOpen = {successfullSaveAlertOpen} toggle = {() => {setsuccessfullSaveAlertOpen(false)}} color="success">
         Succesfully saved!
       </Alert>
 

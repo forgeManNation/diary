@@ -1,10 +1,10 @@
 import React, {useState} from 'react'
 import Diary from './components/Diary';
-import { BrowserRouter, Routes, Route} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import Login from "./auth/Login"
 import Register from "./auth/Register"
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { auth } from './firebase';
+import { auth, signOut } from './firebase';
 
 const authErrors = {
   "admin-restricted-operation": "This operation is restricted to administrators only.",
@@ -103,7 +103,11 @@ const authErrors = {
 
 const App = () => {
 
+  // signOut(auth)
+
   const [user, setuser] = useState<User | null>(null)
+
+
 
   onAuthStateChanged(auth, (logged_user : User | null) => {
 
@@ -126,6 +130,8 @@ const App = () => {
     // setuser(user)
   }
 
+
+
   return (
     <BrowserRouter>
    
@@ -134,17 +140,15 @@ const App = () => {
       <Routes>
       <Route path="/" element={<Diary user = {user}  editMode = {false}  />} />
       <Route path="edit" element={<Diary user = {user}  editMode = {true} />} />
+      <Route path= "/*" element={<Navigate to = "/"/>} />
       </Routes>
     :
     <Routes>
     <Route path= "login" element={<Login authErrors = {authErrors}  />} />
     <Route path="register" element={<Register authErrors = {authErrors}  />} />
     <Route path = "/*" element={<Login authErrors = {authErrors}  />} />
-
     </Routes>
       }
-
-   
     </BrowserRouter>
   )
 }

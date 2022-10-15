@@ -1,15 +1,15 @@
 import React from 'react'
-import { createUserWithEmailAndPassword, auth, updateProfile, signInWithEmailAndPassword } from '../firebase'
+import { createUserWithEmailAndPassword, auth, updateProfile, signInWithEmailAndPassword, db, doc, setDoc } from '../firebase'
 import { useNavigate } from 'react-router-dom'
 import "./authStyles.scss"
 import {faPersonCircleQuestion  } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { User } from 'firebase/auth';
 
+
 interface Props{
   authErrors: {[key: string]: string}
-  // changeUser: (user: User) => void
-}
+ }
 
 const Register = ({authErrors}: Props) => {
 
@@ -29,12 +29,29 @@ const Register = ({authErrors}: Props) => {
       displayName: name,
       photoURL: profilePicUrl
     })
-  })
+    if( userAuth.user.displayName){
+      
+    const docRef = doc(db, "users", userAuth.user.displayName);
+    try{
+     setDoc(docRef, {diary_name: "diaryName", username: userAuth.user.displayName, diary_pages: [
+     {editMode: false,
+      index: 0,
+      pageContent: "hear about us"
+    }
+     ]})
+     console.log("NOW I AM SAVED - GOOD GOD :)");
+    }
+    catch(err){
+      console.log(err.message, ":)))))))))))))))))))))))))))XDDDDDDDDDDDDDDDDDDDDD"); 
+    }
+    }
+    })
   
   //signing the user in after succesful registration
   await signInWithEmailAndPassword(auth, email,password).then(userAuth => {
     console.log('succesfully logged in mate :) good job');
   })
+
     }
     catch(err){
 
@@ -78,7 +95,9 @@ const Register = ({authErrors}: Props) => {
       <button  onClick={register} className="btn btn-outline-dark w-10">Register</button>
       &nbsp;&nbsp;
       <button className='btn text-dark'>guest login</button>
-      <p className='text-danger'>{errorMessage}</p>
+      <div style={{width: "50vh", height: "7vh", overflow: 'hidden'}} >
+        <p className='text-danger' >{errorMessage}</p> 
+      </div>
     </div>
 </div>
   )

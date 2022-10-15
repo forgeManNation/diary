@@ -9,6 +9,14 @@ $paper-line: #94ACD4;
   flex-direction: column;
   align-items: center;
 }
+
+.addImage{
+  width: 7vh;
+  height: 7vh;
+  margin: 5vh;
+  cursor: pointer;
+}
+
 .paper {
   width: 60%;
   height: 100%;
@@ -23,14 +31,3 @@ $paper-line: #94ACD4;
   padding-left: 10vh;
   word-wrap: break-word 
 }
-
-
-
-
-
-
-
-
-
-
-

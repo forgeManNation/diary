@@ -62,11 +62,11 @@ const Login = ({authErrors}: Props) => {
   {/* <p className='errorMessage'>{errorMessage}</p> */}
   <button  onClick={logIn} className="btn btn-outline-dark">Sign in</button>
 
-  {/* <div className="errMessageContainer"> */}
-    
-      <p className='text-danger' style={{maxWidth: "50vh"}}>{errorMessage !== "" ? errorMessage : 
-      <span className='invisible'>This is a placeholder invisible text so that auth container knows how much it should strech for failed auth messages</span>}</p>
-  {/* </div> */}
+ 
+    <div style={{width: "50vh", height: "7vh", overflow: 'hidden'}} >
+    <p className='text-danger' >{errorMessage}</p> 
+    </div>
+      
 
 
 </div>

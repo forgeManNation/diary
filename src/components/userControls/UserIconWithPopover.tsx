@@ -50,7 +50,7 @@ const UserIconWithPopover = ({user, triggerChangeProfileAlert, triggerWrongUserP
     <>
     <span id = "userIcon">
         {user.photoURL ?
-        <img src={user.photoURL} className = "userImage" width = "45px" height="45px" alt="user"/>
+        <img src={user.photoURL} className = "userImage" width = "45px" height="45px" alt={String(user.displayName)}/>
         :
         <FontAwesomeIcon icon={faUser} />
         }
@@ -59,7 +59,6 @@ const UserIconWithPopover = ({user, triggerChangeProfileAlert, triggerWrongUserP
         <PopoverBody>
           <h5 className = "popoverUsername">{user.displayName}</h5>
           <ul className='list-unstyled m-0 '>
-            {/* <li role="button">{user.displayName}</li> */}
             <li role="button" onClick={() => {signOut(auth)}}>log off&nbsp;&nbsp;<FontAwesomeIcon icon={faUser} /></li>
             <li role= "button" >
               <span onClick={() => {setchangeProfilePictureInputOn(!changeProfilePictureInputOn)}}>change profile picture&nbsp;&nbsp;<FontAwesomeIcon icon={faImage} /></span>

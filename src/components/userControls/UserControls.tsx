@@ -9,14 +9,14 @@ import "./userControls.scss"
 interface Props {
   editMode: boolean,
   triggerSave: () => void,
-  triggerDelete: () => void,
+  deletePage: () => void,
   createNewPage: () => void,
   activePageIndex: number,
-  diaryPagesLength: number,
+  diary_pagesLength: number,
   changePage: (numToChangeIndex: number) => void
 }
 
-const UserControls = ({editMode, triggerSave, triggerDelete, activePageIndex, diaryPagesLength, changePage, createNewPage}: Props) => {
+const UserControls = ({editMode, triggerSave, deletePage, activePageIndex, diary_pagesLength, changePage, createNewPage}: Props) => {
 
   const [editTooltipOpen, seteditTooltipOpen] = React.useState(false)
   const editIconRef = React.useRef(null)
@@ -57,12 +57,12 @@ const UserControls = ({editMode, triggerSave, triggerDelete, activePageIndex, di
     &nbsp;
     &nbsp;
 
-    {activePageIndex + 1} / {diaryPagesLength}
+    {activePageIndex + 1} / {diary_pagesLength}
 
     &nbsp;
     &nbsp;
 
-    {activePageIndex !== diaryPagesLength - 1
+    {activePageIndex !== diary_pagesLength - 1
     ? 
     <FontAwesomeIcon onClick={() => changePage(1)} role="button"  size = "lg"  icon={faChevronRight} />  
     :
@@ -100,7 +100,7 @@ const UserControls = ({editMode, triggerSave, triggerDelete, activePageIndex, di
         &nbsp;
         &nbsp;
 
-        <div role="button" id = "saveButton" onClick={triggerDelete}>
+        <div role="button" id = "saveButton" onClick={deletePage}>
         <FontAwesomeIcon size='lg' ref = {saveIconRef} icon={faTrash} />&nbsp; Delete</div>
         <Tooltip placement="bottom" isOpen={saveTooltipOpen} target={saveIconRef} toggle={() => setsaveTooltipOpen(!saveTooltipOpen)}>
                 delete page
