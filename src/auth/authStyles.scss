@@ -1,26 +1,39 @@
 .authBg{
-    // background-image: url(./uncharted_poster.jpg);
-
-    background-image: url(../uncharted_poster.jpg),linear-gradient(#eb01a5, #d13531);
+    background-color: whitesmoke;
+    background-image: url(../uncharted_poster.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     min-height: 100vh;
-}
-// .mainAuthContainer{
-//     width: calc(70vh);
-// }
 
-.errMessageContainer{
-    position: relative;
-    padding: 3vh;
+    
+    .mainAuthContainer{
+        width: 385px;
+
+        .authActionButton{
+            margin-bottom: 22px;
+        }
+        
+        .errorMessageContainer{
+            position: relative;
+            width: 100%;
+            min-height: 45px;
+            margin-bottom: 13px;
+            background-color: #d13c37;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .errorMessage{
+                margin: 0;
+                padding: 5px;
+                text-align: center;
+                // line-height: 50px;
+                color: #fff;
+            }
+        }
+    }
 }
 
-.errorMessage{
-    color: #d13531;
-    position: absolute;
-    left: 0;
-    right: 0;
-    margin: auto;
-    top: 0;
-    bottom: 0;
-}
+
+
+
+

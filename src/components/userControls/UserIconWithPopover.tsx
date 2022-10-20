@@ -1,4 +1,4 @@
-import React, { SyntheticEvent } from 'react'
+import React, { SyntheticEvent, useEffect } from 'react'
 import { User } from 'firebase/auth'
 import {faUser, faXmark, faCheck, faImage} from '@fortawesome/free-solid-svg-icons'
 import {Popover, PopoverBody} from "reactstrap"
@@ -20,7 +20,7 @@ const UserIconWithPopover = ({user, triggerChangeProfileAlert, triggerWrongUserP
   const [changeProfilePictureInputOn, setchangeProfilePictureInputOn] = React.useState(false)
   const [profilePicInputValue, setprofilePicInputValue] = React.useState("")
   const [userTooltipOpen, setuserTooltipOpen] = React.useState(false)
-
+  const [isImageUrlValid, setisImageUrlValid] = React.useState(false)
 
   function onProfilePicUrlChange (e : SyntheticEvent) {
     e.preventDefault()
@@ -43,13 +43,31 @@ const UserIconWithPopover = ({user, triggerChangeProfileAlert, triggerWrongUserP
           triggerWrongUserPicUrlAlert()
         }
       }
-      
-  
+
+    async function checkImage(url : string){
+     
+        const res = await fetch(url);
+        const buff = await res.blob();
+       
+        if(buff.type.startsWith('image/')){
+          setisImageUrlValid(true)
+        }
+   
+   }
+    
+   useEffect(() => {
+    
+    if(user.photoURL !== null){
+    checkImage(user.photoURL)
+    }
+
+   }, [user.photoURL])
+   
   
     return (
     <>
     <span id = "userIcon">
-        {user.photoURL ?
+        {user.photoURL && isImageUrlValid ?
         <img src={user.photoURL} className = "userImage" width = "45px" height="45px" alt={String(user.displayName)}/>
         :
         <FontAwesomeIcon icon={faUser} />

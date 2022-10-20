@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect} from 'react'
 import Page from "./page/Page"
 import "./diary.scss"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faPen, faSpinner} from '@fortawesome/free-solid-svg-icons'
+import {faArrowsSpin} from '@fortawesome/free-solid-svg-icons'
 import {db, getDoc, setDoc, doc} from "../firebase"
 import {Alert} from 'reactstrap'
 import { User } from 'firebase/auth'
@@ -25,67 +25,44 @@ const [wrongUserPicAlertOpen, setwrongUserPicAlertOpen] = useState(false)
 const [activePageIndex, setactivePageIndex] = useState(0)
 const [newPageAlertOpen, setnewPageAlertOpen] = useState(false)
 
-//initial load of data from database
+//initial load of data from firestore database
 useEffect(() => {
-  //initial load of data from database
+  //initial load of data from firestore database
 async function getDataFromDb() {
   try {
 
+    //TODO: find out whether this measure is good enough
+    //if user is authenticated
+    if(user.email){
 
-    if(user.displayName !== null){
-      const docRef = doc(db, "users", user.displayName);
-      const docSnap = await getDoc(docRef)
-
-      console.log(user.displayName, "fockin jojoooooooo");
+      const docRef = doc(db, "users", user.email);
+      let docSnap = await getDoc(docRef)
       
-
-      if(docSnap.exists()){
-
-          //the retrieved data
-          let diaryDataFromDatabase = docSnap.data();
-
-          console.log('i exist and data got');
-          
-
-          if(diaryDataFromDatabase){
-            console.log("diaryDataFromDatabase exists :) :P", diaryDataFromDatabase.diary_pages, diaryDataFromDatabase);
-            
-
-          setdiaryName(diaryDataFromDatabase.diaryName)
-          diary_pages.current = diaryDataFromDatabase.diary_pages
-          }
-          else{
-            console.log("what the fuck why");
-            
-          }
-      }
-      else{
+      //if user does not have a firestore database create new firestore database  
+      if(!docSnap.exists()){    
+        await setDoc(docRef, {
+          diaryName: user.displayName + "'s diary",
+          diary_pages: [
+            {editMode: false,
+             index: 0,
+             page_content: "This is your first diary page :) write as you wish"
+            }
+          ],
+          username: user.displayName
+        });
         
-          await setDoc(docRef, {
-            diaryName: user.displayName + "'s diary",
-            diary_pages: [
-              {editMode: false,
-               index: 0,
-               page_content: "This is new diary page"
-              }
-            ],
-            username: user.displayName
-          });
+        docSnap = await getDoc(docRef)
 
-          const docSnap = await getDoc(docRef)
-
-          //the retrieved data
-          let diaryDataFromDatabase = docSnap.data();
-
-          if(diaryDataFromDatabase){
-          setdiaryName(diaryDataFromDatabase.diary_name)
-          diary_pages.current = diaryDataFromDatabase.diary_pages
-          }
-          else{
-            console.log("what the fuck why");
-            
-          }
       }
+      
+      //the retrieved data form database
+      let diaryDataFromDatabase = docSnap.data();    
+
+      if(diaryDataFromDatabase){
+        setdiaryName(diaryDataFromDatabase.diaryName)
+        diary_pages.current = diaryDataFromDatabase.diary_pages
+      }
+    
     }
 
   } catch (error) {
@@ -99,7 +76,6 @@ async function getDataFromDb() {
 async function saveToDb() {
   if(user.displayName){
     const docRef = doc(db, "users", user.displayName);
-
     await setDoc(docRef, {diaryName: diaryName, username: user.displayName, diary_pages: diary_pages.current})
     }
 }
@@ -119,13 +95,13 @@ async function triggerSave() {
 }, 5000);
   }
 
-async function deletePage(){
+function deletePage(){
   if (diary_pages.current.length > 1 && window.confirm('Are you sure you want to delete this diary page?')) {
 
   // let diary_pagesCopy = [...diary_pages]
   diary_pages.current.splice(activePageIndex, 1)
   // setdiary_pages(diary_pagesCopy)
-  await saveToDb()
+  saveToDb()
 
   if(activePageIndex !== 0) changePage(-1)
   else changePage(1)
@@ -144,8 +120,8 @@ async function createNewDiaryPage() {
   //clearing timeout of alert display when the another new page is created too early from the previous saving
   clearTimeout(createNewDiaryPagetimerID)
 
-  diary_pages.current.push({page_content: "New page content", index: diary_pages.current.length, editMode: false
-  })
+  diary_pages.current.push({page_content: "New page content"})
+  
   
   await saveToDb()
   changePage(+1)
@@ -153,8 +129,8 @@ async function createNewDiaryPage() {
 
   saveToDbtimerID = setTimeout(function () {
     setnewPageAlertOpen(false)
-}, 5000);
-  }
+  }, 5000);
+}
 
 //timer ID -> used for clearing timeout when the data are saved to early
 let changeProfiletimerID : ReturnType<typeof setTimeout>;
@@ -177,8 +153,8 @@ function triggerWrongUserPicUrlAlert () {
   }, 5000);
 }
 
-function changePageValue(pageContent : string, index :number) {
-  diary_pages.current[index] = {page_content: pageContent, index, editMode: false}
+function changePageValue(page_content : string, index :number) {
+  diary_pages.current[index] = {page_content: page_content}
 }
 
 function changePage (numToChangeIndex: number){
@@ -186,17 +162,11 @@ function changePage (numToChangeIndex: number){
 }
 
 interface page {
-  page_content: string,
-  page_newly_added?: boolean,
-  index: number,
-  editMode: boolean
+  page_content: string
 }
 
+  //page that is open right now
   const openPage = diary_pages.current[activePageIndex]
-
-
-  console.log(diary_pages.current, activePageIndex, "ONLY GET ONE SHOT");
-  
 
   return (
     <div className='app'>
@@ -205,9 +175,9 @@ interface page {
         user =  {user} ></UserIconWithPopover>
 
         {diary_pages.current[activePageIndex] !== undefined ? <Page  editMode = {editMode} page_content = {openPage.page_content}
-             key = {"page" + openPage.index} index = {activePageIndex} changePageValue = {changePageValue}/>
+             key = {"page" + activePageIndex} index = {activePageIndex} changePageValue = {changePageValue}/>
         :
-        <FontAwesomeIcon className = "spinningIcon" role="button" color="black" size = "lg"  icon={faSpinner} />
+        <FontAwesomeIcon className = "spinningIcon  fa-spin" role="button" color="black" size = "lg"  icon={faArrowsSpin} />
         }
         <UserControls deletePage = {deletePage} createNewPage = {createNewDiaryPage} changePage={changePage} diary_pagesLength={diary_pages.current.length} activePageIndex = {activePageIndex} editMode = {editMode} triggerSave = {triggerSave} ></UserControls>
 
@@ -228,8 +198,6 @@ interface page {
         Can not update profile picture!
       </Alert>
       </div>
-
-
     </div>
 
   )

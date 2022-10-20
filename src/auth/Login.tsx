@@ -1,4 +1,6 @@
 import { stringLength } from '@firebase/util'
+import { faExclamation, faExclamationCircle, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { User } from 'firebase/auth'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -45,7 +47,7 @@ const Login = ({authErrors}: Props) => {
   return (
     <div className='w-full  d-flex justify-content-center align-content-center flex-wrap authBg'>
     <div className='mainAuthContainer bg-light p-5 pt-4 pb-1'>
-    <h3 className='pb-2 pr-4 w-150 '>Sign in to <br/><strong>travellers diary</strong></h3>
+    <h3 className='pb-2 pr-4 '>Sign in to <br/><strong>travellers diary</strong></h3>
   <div className="mb-3">
     <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
     <input type="email" value={email} onChange = {(e) => {setemail(e.target.value)}} className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"/>
@@ -60,12 +62,22 @@ const Login = ({authErrors}: Props) => {
     <p >No account? <span role= "button" className='text-primary' onClick={() => {navigate("register", { replace: true });}}>Register instead</span> </p>
   </div>
   {/* <p className='errorMessage'>{errorMessage}</p> */}
-  <button  onClick={logIn} className="btn btn-outline-dark">Sign in</button>
+  <button  onClick={logIn} className="authActionButton btn  btn-outline-dark">Sign in</button>
 
- 
-    <div style={{width: "50vh", height: "7vh", overflow: 'hidden'}} >
-    <p className='text-danger' >{errorMessage}</p> 
+
+      {/* if login failed display this message  */}
+    {errorMessage !== "" ?
+    <div className='errorMessageContainer' >
+    <p className='errorMessage' >
+      <FontAwesomeIcon icon={faExclamationCircle}></FontAwesomeIcon>
+      &nbsp;
+      {errorMessage}
+    </p> 
     </div>
+    :
+    <></>
+    }
+    
       
 
 

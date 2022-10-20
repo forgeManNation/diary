@@ -110,8 +110,7 @@ const App = () => {
 
 
   onAuthStateChanged(auth, (logged_user : User | null) => {
-
-    
+ 
     if(logged_user){
       setuser(logged_user)
     }

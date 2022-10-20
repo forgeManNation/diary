@@ -2,9 +2,9 @@ import React from 'react'
 import { createUserWithEmailAndPassword, auth, updateProfile, signInWithEmailAndPassword, db, doc, setDoc } from '../firebase'
 import { useNavigate } from 'react-router-dom'
 import "./authStyles.scss"
-import {faPersonCircleQuestion  } from '@fortawesome/free-solid-svg-icons'
+import {faExclamationCircle, faPersonCircleQuestion  } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { User } from 'firebase/auth';
+import { User, UserCredential } from 'firebase/auth';
 
 
 interface Props{
@@ -23,35 +23,15 @@ const Register = ({authErrors}: Props) => {
 
   async function register(){ 
 
-    try{
-    await createUserWithEmailAndPassword(auth, email, password)
-    .then( userAuth => {updateProfile(userAuth.user, {
-      displayName: name,
-      photoURL: profilePicUrl
-    })
-    if( userAuth.user.displayName){
-      
-    const docRef = doc(db, "users", userAuth.user.displayName);
-    try{
-     setDoc(docRef, {diary_name: "diaryName", username: userAuth.user.displayName, diary_pages: [
-     {editMode: false,
-      index: 0,
-      pageContent: "hear about us"
-    }
-     ]})
-     console.log("NOW I AM SAVED - GOOD GOD :)");
-    }
-    catch(err){
-      console.log(err.message, ":)))))))))))))))))))))))))))XDDDDDDDDDDDDDDDDDDDDD"); 
-    }
-    }
-    })
-  
-  //signing the user in after succesful registration
-  await signInWithEmailAndPassword(auth, email,password).then(userAuth => {
-    console.log('succesfully logged in mate :) good job');
-  })
+    let createdName = name !== "" ? name : "user" 
 
+    try{
+    const userAuth : UserCredential = await createUserWithEmailAndPassword(auth, email, password)
+    updateProfile(userAuth.user, {
+      displayName: createdName,
+      photoURL: profilePicUrl
+    })    
+  
     }
     catch(err){
 
@@ -65,12 +45,13 @@ const Register = ({authErrors}: Props) => {
 
 
     }
+  
 }
 
 
   return (
     <div className='w-full  d-flex justify-content-center align-content-center flex-wrap authBg'>
-        <div className=' bg-light p-5 pt-4 pb-0'  >
+        <div className='mainAuthContainer bg-light p-5 pt-4 pb-0'  >
         <h3 className='pb-2'>Register in to<br/><strong>travellers diary</strong></h3>
       <div className="mb-3">
         <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
@@ -92,12 +73,25 @@ const Register = ({authErrors}: Props) => {
       
       <p>have an account already? <span onClick={() => {navigate("../", { replace: true })}} role="button" className='text-primary'>Log in</span> instead</p>
 
+      <div className='authActionButton'>
       <button  onClick={register} className="btn btn-outline-dark w-10">Register</button>
       &nbsp;&nbsp;
       <button className='btn text-dark'>guest login</button>
-      <div style={{width: "50vh", height: "7vh", overflow: 'hidden'}} >
-        <p className='text-danger' >{errorMessage}</p> 
       </div>
+
+      {/* if register failed display this message  */}
+      {errorMessage !== "" ?
+      <div className='errorMessageContainer' >
+      <p className='errorMessage' >
+        <FontAwesomeIcon icon={faExclamationCircle}></FontAwesomeIcon>
+        &nbsp;
+        {errorMessage}
+      </p> 
+      </div>
+      :
+      <></>
+    }
+    
     </div>
 </div>
   )
