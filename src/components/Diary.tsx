@@ -17,13 +17,25 @@ interface Props  {
 
 const Diary = ({editMode, user} : Props) => {
 
+
+//all of the diary content is stored in this array
 const diary_pages = useRef<page[]>([])
+
+
 const [diaryName, setdiaryName] = useState("Diary of smiling pirate")
+
+
 const [successfullSaveAlertOpen, setsuccessfullSaveAlertOpen] = useState(false)
 const [successProfilePictureAlertOpen, setsuccessProfilePictureAlertOpen] = useState(false)
 const [wrongUserPicAlertOpen, setwrongUserPicAlertOpen] = useState(false)
 const [activePageIndex, setactivePageIndex] = useState(0)
 const [newPageAlertOpen, setnewPageAlertOpen] = useState(false)
+
+
+const newUserFirstDiaryPage = {
+  page_content: "This is your first diary page :) write as you wish"
+ }  
+
 
 //initial load of data from firestore database
 useEffect(() => {
@@ -41,13 +53,8 @@ async function getDataFromDb() {
       //if user does not have a firestore database create new firestore database  
       if(!docSnap.exists()){    
         await setDoc(docRef, {
-          diaryName: user.displayName + "'s diary",
-          diary_pages: [
-            {editMode: false,
-             index: 0,
-             page_content: "This is your first diary page :) write as you wish"
-            }
-          ],
+          diaryName: (user.displayName ? user.displayName : "adventrurer") + "'s diary",
+          diary_pages: [newUserFirstDiaryPage],
           username: user.displayName
         });
         
@@ -163,6 +170,7 @@ function changePage (numToChangeIndex: number){
 
 interface page {
   page_content: string
+  
 }
 
   //page that is open right now

@@ -75,7 +75,7 @@ const UserIconWithPopover = ({user, triggerChangeProfileAlert, triggerWrongUserP
         </span>
         <Popover placement="bottom"  isOpen={userTooltipOpen} trigger = "hover" target="userIcon" toggle={() => setuserTooltipOpen(!userTooltipOpen)} >
         <PopoverBody>
-          <h5 className = "popoverUsername">{user.displayName}</h5>
+          <h5 className = "popoverUsername">{['user',null ,""].includes(user.displayName) ? user.email : user.displayName}</h5>
           <ul className='list-unstyled m-0 '>
             <li role="button" onClick={() => {signOut(auth)}}>log off&nbsp;&nbsp;<FontAwesomeIcon icon={faUser} /></li>
             <li role= "button" >
