@@ -1,6 +1,6 @@
 import React from "react"
 import {Tooltip} from "reactstrap"
-import {faFilePen, faFloppyDisk, faBookReader, faChevronLeft, faChevronRight, faCancel, faPen, faTrash} from '@fortawesome/free-solid-svg-icons'
+import {faFilePen, faFloppyDisk, faBookReader, faChevronLeft, faChevronRight, faCancel, faPen, faTrash, faMap} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useNavigate } from 'react-router-dom'
 import "./userControls.scss"
@@ -8,7 +8,7 @@ import "./userControls.scss"
 
 interface Props {
   editMode: boolean,
-  triggerSave: () => void,
+  save: () => void,
   deletePage: () => void,
   createNewPage: () => void,
   activePageIndex: number,
@@ -16,7 +16,7 @@ interface Props {
   changePage: (numToChangeIndex: number) => void
 }
 
-const UserControls = ({editMode, triggerSave, deletePage, activePageIndex, diary_pagesLength, changePage, createNewPage}: Props) => {
+const UserControls = ({editMode, save, deletePage, activePageIndex, diary_pagesLength, changePage, createNewPage}: Props) => {
 
   const [editTooltipOpen, seteditTooltipOpen] = React.useState(false)
   const editIconRef = React.useRef(null)
@@ -39,6 +39,7 @@ const UserControls = ({editMode, triggerSave, deletePage, activePageIndex, diary
   
   return (
     <div className="userControls">
+
 
     <div className='userControlsRow'>
 
@@ -90,7 +91,7 @@ const UserControls = ({editMode, triggerSave, deletePage, activePageIndex, diary
         &nbsp;
 
         
-        <div role="button" id = "saveButton" onClick={triggerSave}>
+        <div role="button" id = "saveButton" onClick={save}>
         <FontAwesomeIcon size='lg' ref = {saveIconRef} icon={faFloppyDisk} />&nbsp; Save</div>
         <Tooltip placement="bottom" isOpen={saveTooltipOpen} target={saveIconRef} toggle={() => setsaveTooltipOpen(!saveTooltipOpen)}>
                 save progress

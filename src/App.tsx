@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import Diary from './components/Diary';
+import DiaryWithAlerts from './components/DiaryWithAlerts';
 import { BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import Login from "./auth/Login"
 import Register from "./auth/Register"
@@ -137,8 +138,8 @@ const App = () => {
       {
         user !== null ? 
       <Routes>
-      <Route path="/" element={<Diary user = {user}  editMode = {false}  />} />
-      <Route path="edit" element={<Diary user = {user}  editMode = {true} />} />
+      <Route path="/" element={<DiaryWithAlerts user = {user}  editMode = {false}  />} />
+      <Route path="edit" element={<DiaryWithAlerts user = {user}  editMode = {true} />} />
       <Route path= "/*" element={<Navigate to = "/"/>} />
       </Routes>
     :

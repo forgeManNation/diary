@@ -4,8 +4,8 @@ import {faImage, faFileImage, faPlus, faRectangleAd, faAdd, faRectangleList, faP
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { getDownloadURL, getStorage, ref, listAll } from "firebase/storage";
 import {auth} from "../../firebase"
-import ModalAddGeolocation from "./geolocation/ModalAddGeolocation"
 import Gallery from "./gallery/Gallery"
+import Map from "./map/Map"
 
 interface pageProps {
   page_content: string,
@@ -17,7 +17,7 @@ interface pageProps {
 const Page = (props : pageProps) => {
 
   const [galleryPictures, setgalleryPictures] = useState<string[]>([])
-  const [modalAddGeolocationOpen, setmodalAddGeolocationOpen] = useState(false)
+  
   useEffect(() => {
 
 // Create a root reference
@@ -44,39 +44,35 @@ listAll(userImagesRef).then(res =>
   }, [])
 
 
-  function triggerModalAddGeolocationOpen (){
-    setmodalAddGeolocationOpen(!modalAddGeolocationOpen)
-  }
+ 
 
 
   return (
   <div className='page'>
-  <p className="paper" >
-  <p contentEditable= {props.editMode} suppressContentEditableWarning={true}
+  <p className="paper firstPaper text-content" contentEditable= {props.editMode} suppressContentEditableWarning={true}
   onInput={(e) => {
     if(e.currentTarget.textContent) props.changePageValue(e.currentTarget.textContent, props.index)
     }}>
-
-    {props.page_content}
-
+      {props.page_content}
   </p>
-  <div className='gallery'>
-      {galleryPictures.map((pictureUrl : string) => {
-        return <img src = {pictureUrl} alt = "galleryImage"></img>
-      })
-      }
-      {props.editMode ?
+
+  <div className='bookbinding'>
+  </div>
+
+  <p className="paper secondPaper" >
+
+    {props.editMode ?
       <div className = "d-flex flex-column">
       <Gallery></Gallery>
-      <FontAwesomeIcon className='addImage' icon={faMap} onClick = {triggerModalAddGeolocationOpen} />
-      <ModalAddGeolocation triggerModalAddGeolocationOpen = {triggerModalAddGeolocationOpen} modalAddGeolocationOpen = {modalAddGeolocationOpen}></ModalAddGeolocation>
+      <Map></Map>
+      
 
       </div>
       :
       <></>
-      } 
-        
-  </div>
+    }
+
+ 
   </p>
 
 

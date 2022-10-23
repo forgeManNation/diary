@@ -2,21 +2,26 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form'
 import {MapContainer, TileLayer, useMap} from 'react-leaflet'
-import React, {useState} from "react"
+import React, {useState, useEffect, useCallback, useRef} from "react"
 import {LatLng} from 'leaflet'
 import 'leaflet/dist/leaflet.css';
 import './modalAddGeolocation.scss'
-import LocationMarker from "./LocationMarker"
-import LeafletMap from "./LeafletMap"
-import GeocodeData from "./GeocodeData"
+import LocationMarker from "../geolocation/LocationMarker"
+import GeocodeData from "../geolocation/GeocodeData"
+import {SimpleMapScreenshoter} from 'leaflet-simple-map-screenshoter'
+import { useGeolocated } from "react-geolocated";
+import LeafletMap from "../geolocation/LeafletMap"
+
 
 interface props {
     triggerModalAddGeolocationOpen: () => void,
     modalAddGeolocationOpen: boolean
+    addMap: (newMapScreenshot: Blob) => void,
+    maps: Blob[]
 }
 
 
-function ModalAddGeolocation({triggerModalAddGeolocationOpen, modalAddGeolocationOpen,  }: props) {
+function ModalAddGeolocation({triggerModalAddGeolocationOpen, modalAddGeolocationOpen, addMap, maps  }: props) {
   const [markerLatitude, setmarkerLatitude] = useState(51.505)
   const [markerLongitude, setmarkerLongitude] = useState(-0.09)
   const [mapZoom, setmapZoom] = useState(1)
@@ -25,8 +30,22 @@ function ModalAddGeolocation({triggerModalAddGeolocationOpen, modalAddGeolocatio
   const [paintedMapChecked, setpaintedMapChecked] = useState(true)
   const [checkmarkAddLocationDescription, setcheckmarkAddLocationDescription] = useState(true)
   const [geocodeDataOutput, setgeocodeDataOutput] = useState("")
+  
 
-    function triggerSaveMap (e: any) {      
+
+  interface RefObject {
+    saveMap: () => void
+  }
+  
+  const leafletMapRef = useRef<RefObject>(null)
+
+
+    function triggerCreateMap () {
+
+      if(leafletMapRef.current){
+        leafletMapRef.current.saveMap()
+      }
+      //createMap(mapZoom, mapCentre, new LatLng(markerLatitude, markerLongitude))
     }
 
     function changeLatitude (e :  React.ChangeEvent<HTMLInputElement>) {
@@ -56,6 +75,25 @@ function ModalAddGeolocation({triggerModalAddGeolocationOpen, modalAddGeolocatio
         setmarkerLongitude(newLongitude)
     }
 
+
+
+    const leafletMapProps = {
+      paintedMapChecked,
+       markerLatitude,
+       markerLongitude,
+       mapCentre,
+       changeCenter,
+       mapZoom,
+       changeZoom,
+       changeMarkerLatitude,
+       changeMarkerLongitude,
+       addMap,
+       maps
+    }
+    
+
+    
+
   return (
     <Modal className='geolocationModal' show={modalAddGeolocationOpen} onHide={triggerModalAddGeolocationOpen}>
     <Modal.Header closeButton>
@@ -67,15 +105,15 @@ function ModalAddGeolocation({triggerModalAddGeolocationOpen, modalAddGeolocatio
             <Form.Label>Lattitude</Form.Label>
             &nbsp;
             &nbsp;
-            <Form.Control type="number" value={Math.round(markerLatitude * 100) / 100}  onChange = {changeLatitude} placeholder="Lattitude" />
+            <Form.Control type="number" value={markerLatitude}  onChange = {changeLatitude} placeholder="Lattitude" />
             &nbsp;
             &nbsp;
             <Form.Label>Longitude</Form.Label>
             &nbsp;
             &nbsp;
-            <Form.Control type="number" value={Math.round(markerLongitude * 100) / 100} onChange = {changeLongitude} placeholder="Longitude" />
+            <Form.Control type="number" value={markerLongitude} onChange = {changeLongitude} placeholder="Longitude" />
           </div>
-            <LeafletMap paintedMapChecked={paintedMapChecked} markerLatitude = {markerLatitude} markerLongitude = {markerLongitude} mapCentre = {mapCentre} changeCenter={changeCenter} mapZoom = {mapZoom} changeZoom = {changeZoom} changeMarkerLatitude = {changeMarkerLatitude} changeMarkerLongitude = {changeMarkerLongitude}></LeafletMap>
+            <LeafletMap ref = {leafletMapRef} {...leafletMapProps}></LeafletMap>
             <code className = "gpsLocationErrorMessage">{gpsLocationErrorMessage}</code>
             <h4>{checkmarkAddLocationDescription ? <GeocodeData changeGeocodeDataOutput = {changeGeocodeDataOutput} mapCentre = {mapCentre} geocodeDataOutput = {geocodeDataOutput} ></GeocodeData> : <></>}</h4>
             <div className='checkMarkMapLayerSection'>
@@ -94,7 +132,7 @@ function ModalAddGeolocation({triggerModalAddGeolocationOpen, modalAddGeolocatio
       <Button variant="secondary" onClick={triggerModalAddGeolocationOpen}>
         Close
       </Button>
-      <Button variant="success" onClick={triggerSaveMap}>
+      <Button variant="success" onClick={() => {triggerCreateMap(); triggerModalAddGeolocationOpen()}}>
         Add to page
       </Button>
     </Modal.Footer>
