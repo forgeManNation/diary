@@ -44,6 +44,7 @@ function ModalAddGeolocation({triggerModalAddGeolocationOpen, modalAddGeolocatio
 
       if(leafletMapRef.current){
         leafletMapRef.current.saveMap()
+        
       }
       //createMap(mapZoom, mapCentre, new LatLng(markerLatitude, markerLongitude))
     }

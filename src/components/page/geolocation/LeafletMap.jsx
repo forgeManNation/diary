@@ -5,11 +5,14 @@ import { LatLng } from 'leaflet'
 import { useGeolocated } from "react-geolocated";
 import {SimpleMapScreenshoter} from 'leaflet-simple-map-screenshoter'
 
-
+    let theBlob;
 
 const  LeafletMap = forwardRef(({changeCenter, changeZoom, changeMarkerLongitude, changeMarkerLatitude, markerLatitude, markerLongitude, mapCentre, mapZoom, paintedMapChecked, addMap, maps},
    ref) => {
+
+
     
+
     useImperativeHandle(ref, () => ({
 
       getAlert() {
@@ -17,11 +20,17 @@ const  LeafletMap = forwardRef(({changeCenter, changeZoom, changeMarkerLongitude
       },
        async saveMap(){
         alert("ok so now i will add map")
-        const mapScreenshotBlob = await takeScreenshot()
-        console.log("waiting for signal", mapScreenshotBlob);
-        if(mapScreenshotBlob){
-          addMap(mapScreenshotBlob)
+        await takeScreenshot()
+        console.log('what do i return?');
+        // console.log("waiting for signal", mapScreenshotBlob);
+        // if(mapScreenshotBlob){
+        if(theBlob){
+          addMap(theBlob)
         }
+        else{
+          console.log('blob failed, log the blob');
+        }
+          // }
       }
 
   
@@ -85,12 +94,15 @@ React.useEffect(() => {
 
 
   function takeScreenshot (){
+    console.log('do i even happen WATO?');
     let overridedPluginOptions = {
       mimeType: 'image/jpeg',
     }
     simpleMapScreenshoter.addTo(map)
     
     return simpleMapScreenshoter.takeScreen("blob", undefined).then(blob => {
+      console.log('that is me, a blob, and here i am overriding it', blob);
+      theBlob = blob;
       return blob
       // FileSaver.saveAs(blob, 'screen.png')
     }).catch(e => {
@@ -114,6 +126,7 @@ React.useEffect(() => {
         />
         {/* <SimpleMapScreenshoter onMove = {(e) => {e.takeScreen()}}></SimpleMapScreenshoter> */}
       </MapContainer>
+      <button onClick={takeScreenshot} >take screenshot</button>
     </>
   );
 })

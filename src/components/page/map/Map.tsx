@@ -12,6 +12,8 @@ const Map = () => {
         }
         
         function addMap(newMapScreenshot : Blob){
+                alert("so do i happen ?");
+                
                 setmaps([...maps, newMapScreenshot]);
                 console.log("OMG I AM SETTING MAP WITH", newMapScreenshot);
         }
