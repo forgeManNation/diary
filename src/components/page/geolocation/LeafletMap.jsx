@@ -20,7 +20,10 @@ const  LeafletMap = forwardRef(({changeCenter, changeZoom, changeMarkerLongitude
       },
        async saveMap(){
         alert("ok so now i will add map")
-        await takeScreenshot()
+        takeScreenshot().then(blob => {
+          console.log('added BLOB');
+          addMap(blob)
+        })
         console.log('what do i return?');
         // console.log("waiting for signal", mapScreenshotBlob);
         // if(mapScreenshotBlob){
