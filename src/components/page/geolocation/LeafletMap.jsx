@@ -19,22 +19,35 @@ const  LeafletMap = forwardRef(({changeCenter, changeZoom, changeMarkerLongitude
         alert("getAlert from Child");
       },
        async saveMap(){
-        alert("ok so now i will add map")
-        takeScreenshot().then(blob => {
-          console.log('added BLOB');
-          addMap(blob)
-        })
-        console.log('what do i return?');
+        // takeScreenshot().then(blob => {
+        //   console.log('added BLOB');
+        //   addMap(blob)
+        // })
         // console.log("waiting for signal", mapScreenshotBlob);
         // if(mapScreenshotBlob){
-        if(theBlob){
-          addMap(theBlob)
-        }
-        else{
-          console.log('blob failed, log the blob');
-        }
+        console.log('i do get logged');
+        console.log(await takeScreenshot(), ":P");
+
+        takeScreenshot().then(blob => {
+          console.log('jsem tu?');
+          console.log('v nashvillu');
+          addMap(blob)
+        })
+        .catch(err => {
+          console.log(err, "wau marry");
+        })
+
+
+        console.log(theBlob, 'yujh');
+
+          if(theBlob){
+            addMap(theBlob)
+          }
+          else{
+            console.log('blob failed, log the blob');
+          }
           // }
-      }
+        }
 
   
     }));
@@ -96,25 +109,28 @@ React.useEffect(() => {
 
 
 
-  function takeScreenshot (){
+
+  async function takeScreenshot (){
     console.log('do i even happen WATO?');
     let overridedPluginOptions = {
       mimeType: 'image/jpeg',
     }
-    simpleMapScreenshoter.addTo(map)
     
-    return simpleMapScreenshoter.takeScreen("blob", undefined).then(blob => {
-      console.log('that is me, a blob, and here i am overriding it', blob);
-      theBlob = blob;
-      return blob
-      // FileSaver.saveAs(blob, 'screen.png')
-    }).catch(e => {
-      console.log(e, )
-
-      
-    })
+    simpleMapScreenshoter.addTo(map)
+    const blazek = await simpleMapScreenshoter.takeScreen("blob", undefined)
+    console.log(blazek, "kozla zahradnikem");
+    // theBlob = blob
+    console.log('so i do still happen? :D');
+    // return blob
+  // .error(err => {
+  //   console.log(err, "farnkfurt londyn");
+  // })
+  // .catch(err => {
+  //   console.log(err, "farnkfurt londyn");
+  // })
+  console.log(theBlob, 'volnost rovnost pohoda');
+  return blazek
   }
-
 
 
   return (
