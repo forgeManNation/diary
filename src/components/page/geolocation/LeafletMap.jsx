@@ -7,8 +7,22 @@ import {SimpleMapScreenshoter} from 'leaflet-simple-map-screenshoter'
 
     let theBlob;
 
-const  LeafletMap = forwardRef(({changeCenter, changeZoom, changeMarkerLongitude, changeMarkerLatitude, markerLatitude, markerLongitude, mapCentre, mapZoom, paintedMapChecked, addMap, maps},
+const  LeafletMap = forwardRef(({changeCenter, changeZoom, changeMarkerLongitude, changeMarkerLatitude, markerLatitude, markerLongitude,
+   mapCentre, mapZoom, paintedMapChecked, addMap, maps, triggerModalAddGeolocationOpen},
    ref) => {
+    const [gpsLocationErrorMessage, setgpsLocationErrorMessage] = useState("")
+
+    const [map, setMap] = useState(null)
+    const initialZoom = 10
+    let simpleMapScreenshoter = new SimpleMapScreenshoter()
+  
+    const { coords, isGeolocationAvailable, isGeolocationEnabled } =
+        useGeolocated({
+            positionOptions: {
+                enableHighAccuracy: false,
+            },
+            userDecisionTimeout: 5000,
+        });
 
 
     
@@ -18,53 +32,17 @@ const  LeafletMap = forwardRef(({changeCenter, changeZoom, changeMarkerLongitude
       getAlert() {
         alert("getAlert from Child");
       },
-       async saveMap(){
-        // takeScreenshot().then(blob => {
-        //   console.log('added BLOB');
-        //   addMap(blob)
-        // })
-        // console.log("waiting for signal", mapScreenshotBlob);
-        // if(mapScreenshotBlob){
-        console.log('i do get logged');
-        console.log(await takeScreenshot(), ":P");
-
-        takeScreenshot().then(blob => {
-          console.log('jsem tu?');
-          console.log('v nashvillu');
-          addMap(blob)
-        })
-        .catch(err => {
-          console.log(err, "wau marry");
-        })
-
-
-        console.log(theBlob, 'yujh');
-
-          if(theBlob){
-            addMap(theBlob)
-          }
-          else{
-            console.log('blob failed, log the blob');
-          }
-          // }
+      async saveMap(){
+        await takeScreenshot()
+        triggerModalAddGeolocationOpen()
         }
 
   
     }));
+
+  // takeScreenshot()
   
-  const [gpsLocationErrorMessage, setgpsLocationErrorMessage] = useState("")
-
-  const [map, setMap] = useState(null)
-  const initialZoom = 10
-  let simpleMapScreenshoter = new SimpleMapScreenshoter()
-
-  const { coords, isGeolocationAvailable, isGeolocationEnabled } =
-      useGeolocated({
-          positionOptions: {
-              enableHighAccuracy: false,
-          },
-          userDecisionTimeout: 5000,
-      });
+ 
 
 React.useEffect(() => {
       

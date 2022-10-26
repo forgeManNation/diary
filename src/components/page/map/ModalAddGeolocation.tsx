@@ -89,7 +89,8 @@ function ModalAddGeolocation({triggerModalAddGeolocationOpen, modalAddGeolocatio
        changeMarkerLatitude,
        changeMarkerLongitude,
        addMap,
-       maps
+       maps,
+       triggerModalAddGeolocationOpen
     }
     
 
@@ -133,7 +134,8 @@ function ModalAddGeolocation({triggerModalAddGeolocationOpen, modalAddGeolocatio
       <Button variant="secondary" onClick={triggerModalAddGeolocationOpen}>
         Close
       </Button>
-      <Button variant="success" onClick={() => {triggerCreateMap(); triggerModalAddGeolocationOpen()}}>
+      <Button variant="success" onClick={() => {triggerCreateMap()}}>
+        {/* ; triggerModalAddGeolocationOpen() */}
         Add to page
       </Button>
     </Modal.Footer>
