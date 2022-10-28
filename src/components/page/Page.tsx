@@ -4,15 +4,16 @@ import {faImage, faFileImage, faPlus, faRectangleAd, faAdd, faRectangleList, faP
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { getDownloadURL, getStorage, ref, listAll } from "firebase/storage";
 import {auth} from "../../firebase"
-import Gallery from "./gallery/Gallery"
-import Map from "./map/Map"
+import Images from './images/Images';
 
 interface pageProps {
   page_content: string,
   index: number,
-  changePageValue: (pageContent : string, index :number) => void,
-  editMode: boolean
+  changePageValue: (pageContent : string, images: Blob[], index :number) => void,
+  editMode: boolean,
+  images: Blob[],
 }
+
 
 const Page = (props : pageProps) => {
 
@@ -44,14 +45,34 @@ listAll(userImagesRef).then(res =>
   }, [])
 
 
- 
+interface changeValueProps {
+  textContent?: string,
+  images?: Blob[],
+  index: number
+} 
 
+function triggerChangePageValue ({textContent, images, index} : changeValueProps) {
+
+  let newTextContent = textContent ? textContent : props.page_content;
+  let newImages = images ? images : props.images;
+  
+  console.log('here imaages are this in page', newImages);
+  
+  props.changePageValue(newTextContent, newImages, index)
+
+}
+ 
+  //TODO: remove ASAP
+  console.log('images v page', props.images);
+  
 
   return (
   <div className='page'>
   <p className="paper firstPaper text-content" contentEditable= {props.editMode} suppressContentEditableWarning={true}
   onInput={(e) => {
-    if(e.currentTarget.textContent) props.changePageValue(e.currentTarget.textContent, props.index)
+    //TODO: refactor ASAP 
+    // if(e.currentTarget.textContent) props.changePageValue(e.currentTarget.textContent, props.index)
+    triggerChangePageValue({textContent: e.currentTarget.textContent ? e.currentTarget.textContent : undefined, index: props.index})
     }}>
       {props.page_content}
   </p>
@@ -63,8 +84,7 @@ listAll(userImagesRef).then(res =>
 
     {props.editMode ?
       <div className = "d-flex flex-column">
-      <Gallery></Gallery>
-      <Map></Map>
+      <Images images = {props.images} changeImages = {(newImages) => {triggerChangePageValue({images: newImages, index: props.index})}}></Images>
       
 
       </div>

@@ -27,13 +27,28 @@ $paper-line: #94ACD4;
   // }
 }
 
+.addImagesActionButtons{
+  position: absolute;
+  // bottom: 70px;
+  padding: 0;
+  height: 10vh;
+  bottom: 10px;
+}
+
+.addImagesActionButtonsInnerContainer{
+  
+  position: fixed;  
+ 
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 
 
-
+}
 
 .addAdditionalFeatureButton{
-  background: rgb(54, 58, 62)!important;
-  color: rgb(148, 129, 34)!important;
+  background: rgb(56, 63, 63)!important;
+  color: rgb(209, 194, 148)!important;
   font-family: 'Courier New', Courier, monospace;
   margin: 10px;
 }
@@ -60,6 +75,7 @@ $paper-line: #94ACD4;
   padding-left: 10vh;
   word-wrap: break-word;
   overflow: auto;
+  position: relative;
 }
 
 .firstPaper{

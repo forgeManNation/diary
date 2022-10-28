@@ -5,8 +5,6 @@ import { LatLng } from 'leaflet'
 import { useGeolocated } from "react-geolocated";
 import {SimpleMapScreenshoter} from 'leaflet-simple-map-screenshoter'
 
-    let theBlob;
-
 const  LeafletMap = forwardRef(({changeCenter, changeZoom, changeMarkerLongitude, changeMarkerLatitude, markerLatitude, markerLongitude,
    mapCentre, mapZoom, paintedMapChecked, addMap, maps, triggerModalAddGeolocationOpen},
    ref) => {
@@ -28,19 +26,14 @@ const  LeafletMap = forwardRef(({changeCenter, changeZoom, changeMarkerLongitude
     
 
     useImperativeHandle(ref, () => ({
-
-      getAlert() {
-        alert("getAlert from Child");
-      },
       async saveMap(){
-        await takeScreenshot()
+        const newMap = await takeScreenshot();
+        addMap(newMap)
         triggerModalAddGeolocationOpen()
         }
 
   
     }));
-
-  // takeScreenshot()
   
  
 
@@ -97,16 +90,7 @@ React.useEffect(() => {
     simpleMapScreenshoter.addTo(map)
     const blazek = await simpleMapScreenshoter.takeScreen("blob", undefined)
     console.log(blazek, "kozla zahradnikem");
-    // theBlob = blob
-    console.log('so i do still happen? :D');
-    // return blob
-  // .error(err => {
-  //   console.log(err, "farnkfurt londyn");
-  // })
-  // .catch(err => {
-  //   console.log(err, "farnkfurt londyn");
-  // })
-  console.log(theBlob, 'volnost rovnost pohoda');
+    
   return blazek
   }
 
@@ -121,9 +105,7 @@ React.useEffect(() => {
         changeLongitude = {changeMarkerLongitude}
         latitude = {markerLatitude} longitude = {markerLongitude}
         />
-        {/* <SimpleMapScreenshoter onMove = {(e) => {e.takeScreen()}}></SimpleMapScreenshoter> */}
       </MapContainer>
-      <button onClick={takeScreenshot} >take screenshot</button>
     </>
   );
 })

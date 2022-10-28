@@ -1,20 +1,18 @@
 .gallery{
         display: flex;
         flex-direction: row;
-        
         overflow: visible;
         flex-wrap: wrap;
-        
-        position: relative;
-        
+
+
+
         .galleryImageContainer{
                 position: relative;
                 margin: 18px;
                 .galleryImage{
                         max-width: 100%;
                         border: 5px solid #fff;
-                        position: relative;
-                        
+                        position: relative;                        
                 }
                 .galleryImageTape {
                         content: "";

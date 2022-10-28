@@ -15,6 +15,7 @@ import { getAuth, createUserWithEmailAndPassword,
                   signOut,
                   onAuthStateChanged
                 } from "firebase/auth";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
 
 
 const firebaseConfig = {
@@ -36,6 +37,8 @@ const firebaseConfig = {
 // Initialize Firebase Authentication and get a reference to the service
   const auth = getAuth();
   
+  const storage = getStorage()
+
 
   export {
     signOut,
@@ -49,6 +52,9 @@ const firebaseConfig = {
     auth,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-    updateProfile
+    updateProfile,
+    storage,
+    ref,
+    uploadBytes
   };
   
