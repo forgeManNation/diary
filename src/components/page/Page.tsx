@@ -7,7 +7,7 @@ import {auth} from "../../firebase"
 import Images from './images/Images';
 
 interface pageProps {
-  page_content: string,
+  pageContent: string,
   index: number,
   changePageValue: (pageContent : string, images: Blob[], index :number) => void,
   editMode: boolean,
@@ -53,7 +53,7 @@ interface changeValueProps {
 
 function triggerChangePageValue ({textContent, images, index} : changeValueProps) {
 
-  let newTextContent = textContent ? textContent : props.page_content;
+  let newTextContent = textContent ? textContent : props.pageContent;
   let newImages = images ? images : props.images;
   
   console.log('here imaages are this in page', newImages);
@@ -74,7 +74,7 @@ function triggerChangePageValue ({textContent, images, index} : changeValueProps
     // if(e.currentTarget.textContent) props.changePageValue(e.currentTarget.textContent, props.index)
     triggerChangePageValue({textContent: e.currentTarget.textContent ? e.currentTarget.textContent : undefined, index: props.index})
     }}>
-      {props.page_content}
+      {props.pageContent}
   </p>
 
   <div className='bookbinding'>

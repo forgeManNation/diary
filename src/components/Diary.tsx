@@ -9,7 +9,7 @@ import { User } from 'firebase/auth'
 import UserControls from "./userControls/UserControls"
 import UserIconWithPopover from "./userControls/UserIconWithPopover"
 import { LatLng } from 'leaflet'
-import { storage, ref, uploadBytes } from "../firebase";
+import { storage, ref, uploadBytes, getBlob } from "../firebase";
 
 
 
@@ -27,7 +27,7 @@ const Diary = ({editMode, user, triggerWrongUserPicUrlAlert, triggerChangeProfil
 
 
 //all of the diary content is stored in this array
-const diary_pages = useRef<page[]>([])
+const [diaryPages, setdiaryPages] = useState<page[]>([])
 
 const [diaryName, setdiaryName] = useState("Diary of smiling pirate")
 // const [images, setimages] = useState<Blob[]>([])
@@ -40,9 +40,9 @@ const [newPageAlertOpen, setnewPageAlertOpen] = useState(false)
 
 const defaultUserName = 'adventurer'
 const newUserFirstDiaryPage = {
-  page_content: "This is your first diary page :) write as you wish",
-  images: []
+  pageContent: "This is your first diary page :) write as you wish",
  }  
+
 
 //initial load of data from firestore database
 useEffect(() => {
@@ -60,7 +60,7 @@ useEffect(() => {
         if(!docSnap.exists()){    
           await setDoc(docRef, {
             diaryName: (user.displayName ? user.displayName : defaultUserName) + "'s diary",
-            diary_pages: [newUserFirstDiaryPage],
+            diaryPages: [newUserFirstDiaryPage],
             username: user.displayName
           });
           
@@ -70,9 +70,38 @@ useEffect(() => {
         //the retrieved data form database
         let diaryDataFromDatabase = docSnap.data();    
 
+        console.log('log me diary pages', diaryDataFromDatabase);
+        
         if(diaryDataFromDatabase){
           setdiaryName(diaryDataFromDatabase.diaryName)
-          diary_pages.current = diaryDataFromDatabase.diary_pages
+          setdiaryPages(diaryDataFromDatabase.diaryPages)
+          
+
+          let diaryDataFromDatabaseWithImagesFromFireStorage = diaryDataFromDatabase.diaryPages.map((diaryPage: {textContent: string}) => {
+            console.log(diaryPage, 'herein i am logging the text content :)');
+            let diaryPageCopy : {textContent: string, images?: Blob[]} = diaryPage;
+
+            //handling fire storage image fetching
+            const storageRef = ref(storage, `/${user.email}/page${activePageIndex}/image${0}`);
+
+            getBlob(storageRef).then(image => {
+              diaryPageCopy.images = [image];
+            })
+            .catch(err => {
+              console.log(err, "tu loguju error");
+              
+            })
+
+            return diaryPageCopy;
+          })
+
+          console.log(diaryPages);
+          
+          
+
+        }
+        else{
+          alert('could not retrieve data from database')
         }
       
       }
@@ -89,10 +118,11 @@ async function saveToDb() {
     //handling firestore saving
     const docRef = doc(db, "users", user.displayName);
     
-    if(diary_pages.current.length !== 0){
-      diary_pages.current.forEach((page, index) => {
+    if(diaryPages.length !== 0){
+      const diaryPagesCopy = [...diaryPages]
+      diaryPagesCopy.forEach((page, index) => {
         //handling fire storage saving
-        const storageRef = ref(storage, '/testovani/image' + index);
+        const storageRef = ref(storage, `/${user.email}/page${activePageIndex}/image${index}`);
         console.log(page, 'log me page');
         
         uploadBytes(storageRef, page.images[index]).then((snapshot) => {
@@ -103,8 +133,9 @@ async function saveToDb() {
     else{
       console.log('no images to show');
     }
+    const diaryPagesTextContents = diaryPages.map(diaryPage => diaryPage.pageContent)
 
-    await setDoc(docRef, {diaryName: diaryName, username: user.displayName, diary_pages: diary_pages.current})
+    await setDoc(docRef, {diaryName: diaryName, username: user.displayName, diaryPages: diaryPagesTextContents})
     }
 }
 
@@ -115,10 +146,11 @@ async function save(){
 }
 
 function deletePage(){
-  if (diary_pages.current.length > 1 && window.confirm('Are you sure you want to delete this diary page?')) {
-  // let diary_pagesCopy = [...diary_pages]
-  diary_pages.current.splice(activePageIndex, 1)
-  // setdiary_pages(diary_pagesCopy)
+  if (diaryPages.length > 1 && window.confirm('Are you sure you want to delete this diary page?')) {
+  // let diaryPagesCopy = [...diaryPages]
+  const diaryPagesCopy = [...diaryPages]
+  diaryPagesCopy.splice(activePageIndex, 1)
+  // setdiaryPages(diaryPagesCopy)
   saveToDb()
 
   if(activePageIndex !== 0) changePage(-1)
@@ -126,13 +158,15 @@ function deletePage(){
 
 
   }
-  else if(diary_pages.current.length <= 1){
+  else if(diaryPages.length <= 1){
     window.alert("You can't delete the only page")
   }
 }
 
 async function createNewPage() {
-  diary_pages.current.push({page_content: "New page content", images: []})
+  const diaryPagesCopy = [...diaryPages]
+  diaryPagesCopy.push({pageContent: "New page content", images: []})
+  setdiaryPages(diaryPagesCopy)
   await saveToDb()
   changePage(+1)
   triggerCreateNewDiaryPageAlert()  
@@ -140,13 +174,14 @@ async function createNewPage() {
 
 
 
-function changePageValue(page_content : string, images: Blob[], index :number) {
+function changePageValue(pageContent : string, images: Blob[], index :number) {
   
   console.log('so here i am setting images as this', images);
-  
-  diary_pages.current[index] = {page_content: page_content, images: images}
+  const diaryPagesCopy = [...diaryPages]
+  diaryPagesCopy[index] = {pageContent: pageContent, images: images}
+  setdiaryPages(diaryPagesCopy)
 
-  console.log(diary_pages.current, "wau");
+  console.log(diaryPages, "wau");
   
 }
 
@@ -157,22 +192,16 @@ function changePage (numToChangeIndex: number){
 
 
 interface page {
-  page_content: string,
+  pageContent: string,
   images: Blob[]
   // map_view_coordinates: LatLng,
   // map_zoom: number,
   // map_marker_coordinates: LatLng,
-
 }
 
   //page that is open right now
-  const openPage = diary_pages.current[activePageIndex]
+  const openPage = diaryPages[activePageIndex]
 
-  //TODO: remove ASAP
-  if(openPage){
-  console.log(openPage, "images v diary", openPage.images);
-  }
-  
 
 
   return (
@@ -183,12 +212,12 @@ interface page {
         triggerChangeProfileAlert = {triggerChangeProfileAlert}
         user =  {user} ></UserIconWithPopover>
 
-        {diary_pages.current[activePageIndex] !== undefined ? <Page editMode = {editMode} page_content = {openPage.page_content}
+        {diaryPages[activePageIndex] !== undefined ? <Page editMode = {editMode} pageContent = {openPage.pageContent}
              key = {"page" + activePageIndex} index = {activePageIndex} changePageValue = {changePageValue}  images =  {openPage.images}/>
         :
         <FontAwesomeIcon className = "spinningIcon  fa-spin" role="button" color="black" size = "lg"  icon={faArrowsSpin} />
         }
-        <UserControls deletePage = {deletePage} createNewPage = {createNewPage} changePage={changePage} diary_pagesLength={diary_pages.current.length} activePageIndex = {activePageIndex} editMode = {editMode} save = {save} ></UserControls>
+        <UserControls deletePage = {deletePage} createNewPage = {createNewPage} changePage={changePage} diaryPagesLength={diaryPages.length} activePageIndex = {activePageIndex} editMode = {editMode} save = {save} ></UserControls>
 
     </div>
 

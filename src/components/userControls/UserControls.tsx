@@ -12,11 +12,11 @@ interface Props {
   deletePage: () => void,
   createNewPage: () => void,
   activePageIndex: number,
-  diary_pagesLength: number,
+  diaryPagesLength: number,
   changePage: (numToChangeIndex: number) => void
 }
 
-const UserControls = ({editMode, save, deletePage, activePageIndex, diary_pagesLength, changePage, createNewPage}: Props) => {
+const UserControls = ({editMode, save, deletePage, activePageIndex, diaryPagesLength, changePage, createNewPage}: Props) => {
 
   const [editTooltipOpen, seteditTooltipOpen] = React.useState(false)
   const editIconRef = React.useRef(null)
@@ -58,12 +58,12 @@ const UserControls = ({editMode, save, deletePage, activePageIndex, diary_pagesL
     &nbsp;
     &nbsp;
 
-    {activePageIndex + 1} / {diary_pagesLength}
+    {activePageIndex + 1} / {diaryPagesLength}
 
     &nbsp;
     &nbsp;
 
-    {activePageIndex !== diary_pagesLength - 1
+    {activePageIndex !== diaryPagesLength - 1
     ? 
     <FontAwesomeIcon onClick={() => changePage(1)} role="button"  size = "lg"  icon={faChevronRight} />  
     :
