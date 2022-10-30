@@ -15,7 +15,14 @@ import { getAuth, createUserWithEmailAndPassword,
                   signOut,
                   onAuthStateChanged
                 } from "firebase/auth";
-import { getStorage, ref, uploadBytes, getBlob } from "firebase/storage";
+
+import { 
+  getStorage,
+  ref,
+  uploadBytes,
+  getBlob,
+  listAll
+   } from "firebase/storage";
 
 
 const firebaseConfig = {
@@ -56,6 +63,7 @@ const firebaseConfig = {
     storage,
     ref,
     uploadBytes,
-    getBlob
+    getBlob,
+    listAll
   };
   
