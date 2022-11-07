@@ -1,8 +1,8 @@
 //paper page styling
-$paper-color: #F1EDE9;
-$paper-line: #94ACD4;
+$paper-color: #f1ede9;
+$paper-line: #94acd4;
 
-.page{
+.page {
   width: 100%;
   display: flex;
   justify-content: center;
@@ -11,31 +11,17 @@ $paper-line: #94ACD4;
   flex: 1 1 0px;
   min-width: 0;
   align-items: stretch;
-  flex-wrap: wrap;  
-
-  // -webkit-scrollbar {
-  //   width: 1em;
-  // }
-   
-  // -webkit-scrollbar-track {
-  //   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  // }
-   
-  // -webkit-scrollbar-thumb {
-  //   background-color: darkgrey;
-  //   outline: 1px solid slategrey;
-  // }
+  flex-wrap: wrap;
 }
 
-.addImagesActionButtons{
+.addImagesActionButtons {
   position: absolute;
-  // bottom: 70px;
   padding: 0;
   height: 10vh;
   bottom: 10px;
 }
 
-.pageTextarea{
+.pageTextarea {
   background: transparent;
   color: #fff;
   resize: none;
@@ -46,40 +32,41 @@ $paper-line: #94ACD4;
   height: 100%;
   position: absolute;
 }
-.addImagesActionButtonsInnerContainer{
-  
-  position: fixed;  
- 
+.addImagesActionButtonsInnerContainer {
+  position: fixed;
+
   display: flex;
   flex-direction: row;
   justify-content: center;
-
-
 }
 
-.addAdditionalFeatureButton{
-  background: rgb(56, 63, 63)!important;
-  color: rgb(209, 194, 148)!important;
-  font-family: 'Courier New', Courier, monospace;
+.addAdditionalFeatureButton {
+  background: rgb(56, 63, 63) !important;
+  color: rgb(209, 194, 148) !important;
+  font-family: "Courier New", Courier, monospace;
   margin: 10px;
 }
 
-.bookbinding{
+.bookbinding {
   background: rgb(69, 56, 27);
   width: 10px;
   margin-top: 20px;
   margin-bottom: 20px;
 }
 
-.paper {  
+.paper {
   color: black;
   margin: 20px;
-  width: 500px;
-  height: 100%;
-  height: 83vh;
+  height: 595px;
+  width: 420px;
   padding: 35px 20px;
-  background: repeating-linear-gradient($paper-color, $paper-color 31px, $paper-line 31px, $paper-line 32px);
-  font-family: 'Yuji Boku';
+  background: repeating-linear-gradient(
+    $paper-color,
+    $paper-color 31px,
+    $paper-line 31px,
+    $paper-line 32px
+  );
+  font-family: "Yuji Boku";
   line-height: 32px;
   outline: 0;
   font-size: 22px;
@@ -90,11 +77,11 @@ $paper-line: #94ACD4;
   position: relative;
 }
 
-.firstPaper{
+.firstPaper {
   margin-right: 0px;
 }
 
-.secondPaper{
+.secondPaper {
   margin-left: 0px;
 }
 
@@ -102,7 +89,7 @@ $paper-line: #94ACD4;
   outline: 0px solid transparent;
 }
 
-.hiddenInput{
+.hiddenInput {
   visibility: hidden;
   width: 0;
   height: 0;

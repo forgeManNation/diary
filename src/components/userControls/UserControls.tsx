@@ -15,29 +15,35 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 import "./userControls.scss";
+import UserIconWithPopover from "./UserIconWithPopover";
+import { User } from "firebase/auth"
 
 interface Props {
   editMode: boolean;
-  save: () => void;
   deletePage: () => void;
   createNewPage: () => void;
   activePageIndex: number;
   diaryPagesLength: number;
   changePage: (numToChangeIndex: number) => void;
+  triggerChangeProfileAlert: () => void;
+  triggerWrongUserPicUrlAlert: () => void;
+  user: User;
 }
 
 const UserControls = ({
   editMode,
-  save,
   deletePage,
   activePageIndex,
   diaryPagesLength,
   changePage,
   createNewPage,
+  triggerChangeProfileAlert,
+  triggerWrongUserPicUrlAlert,
+  user
 }: Props) => {
   const [editTooltipOpen, seteditTooltipOpen] = React.useState(false);
   const editIconRef = React.useRef(null);
-  const [saveTooltipOpen, setsaveTooltipOpen] = React.useState(false);
+  const [deleteTooltipOpen, setdeleteTooltipOpen] = React.useState(false);
   const saveIconRef = React.useRef(null);
   const [disabledChevronTooltipOpen, setdisabledChevronTooltipOpen] =
     React.useState(false);
@@ -118,7 +124,8 @@ const UserControls = ({
           </>
         )}
       </div>
-      &nbsp; &nbsp;
+      &nbsp;
+      &nbsp;
       <div className="userControlsRow">
         {editMode ? (
           <>
@@ -129,28 +136,16 @@ const UserControls = ({
               </span>
             </div>
             &nbsp; &nbsp;
-            <div role="button" id="saveButton">
-              <FontAwesomeIcon size="lg" ref={saveIconRef} icon={faUser} />
-              &nbsp; User
-            </div>
-            <Tooltip
-              placement="bottom"
-              isOpen={saveTooltipOpen}
-              target={saveIconRef}
-              toggle={() => setsaveTooltipOpen(!saveTooltipOpen)}
-            >
-              user
-            </Tooltip>
-            &nbsp; &nbsp;
+
             <div role="button" id="saveButton" onClick={deletePage}>
               <FontAwesomeIcon size="lg" ref={saveIconRef} icon={faTrash} />
               &nbsp; Delete
             </div>
             <Tooltip
               placement="bottom"
-              isOpen={saveTooltipOpen}
+              isOpen={deleteTooltipOpen}
               target={saveIconRef}
-              toggle={() => setsaveTooltipOpen(!saveTooltipOpen)}
+              toggle={() => setdeleteTooltipOpen(!deleteTooltipOpen)}
             >
               delete page
             </Tooltip>
@@ -173,6 +168,11 @@ const UserControls = ({
             </Tooltip>
           </div>
         )}
+      </div>
+      &nbsp;
+      &nbsp;
+      <div className="userControlsRow userIconWithPopoverRow">
+        <UserIconWithPopover user={user} triggerChangeProfileAlert={triggerChangeProfileAlert} triggerWrongUserPicUrlAlert={triggerWrongUserPicUrlAlert}></UserIconWithPopover>
       </div>
     </div>
   );

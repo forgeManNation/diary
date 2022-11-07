@@ -1,91 +1,50 @@
-.app{
-    background-image: url('../uncharted_poster.jpg');
-    background-size: 100% auto;
+.app {
+  background-image: url("../uncharted_poster.jpg");
+  background-size: 100% auto;
 }
 
-.addNewPageButton{
-    position: absolute;
-    margin: 10vh;
+.addNewPageButton {
+  position: absolute;
+  margin: 10vh;
 }
 
-#userIcon{
-    position: fixed;
+.app {
+  text-align: center;
+  min-height: 100vh;
+  background-color: rgba(#dadada, 0.2);
+
+  .container {
     display: flex;
-    flex-direction: row;
-    align-items: center;
+  }
+  .row {
     justify-content: center;
-    border-radius: 4px;
-    margin: 15px;
-    cursor: pointer;
-    top: 20px;
-    right: 55px;
-    padding: 0.5vh;
+  }
 
-   
+  .title {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    font-family: "Yuji Boku";
+  }
 }
 
-.userImage{
-    border-radius: 25px;
+.alert {
+  width: 30%;
+  position: fixed !important;
+  margin-left: auto;
+  margin-right: auto;
+  bottom: 0;
+  bottom: 0px;
+  right: 15px;
 }
 
-.popoverUsername{
-    text-align: center;
+.spinningIcon {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
 }
-
-
-
-li{
-    padding: 5px;
-    border-radius: 5px;
-    text-align: center;
-}
-.trashIcon{
-    z-index: 5;
-    position: absolute;
-    top: 3vh;
-    right: 3vh;
-}
-li:hover{
-    background-color: rgb(240, 238, 238);
-}
-.app{
-    text-align: center;
-    min-height: 100vh;
-    background-color: rgba(#dadada, 0.2);
-    
-    .container{
-        display: flex;
-    }
-    .row{
-        justify-content: center;
-    }
-
-    .title{
-        padding-top: 30px;
-        padding-bottom: 30px;
-        font-family: "Yuji Boku";
-    }
-}   
-
-.alert{
-    width: 30%;
-    position: fixed!important;
-    margin-left: auto;
-    margin-right: auto;
-    bottom: 0;
-    bottom: 0px;
-    right: 15px;
-}
-
-.spinningIcon{
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: auto;
-    margin-bottom: auto;
-}
-

@@ -10,15 +10,14 @@ import UserControls from "./userControls/UserControls";
 import UserIconWithPopover from "./userControls/UserIconWithPopover";
 import { LatLng } from "leaflet";
 import { storage, ref, uploadBytes, getBlob, listAll, auth } from "../firebase";
-// import { async } from '@firebase/util'
+
 
 interface Props {
   editMode: boolean;
   user: User;
   triggerWrongUserPicUrlAlert: () => void;
   triggerChangeProfileAlert: () => void;
-  triggerCreateNewDiaryPageAlert: () => void;
-  triggerSaveAlert: () => void;
+  triggerCreateNewDiaryPageAlert: () => void
 }
 
 interface page {
@@ -31,35 +30,25 @@ const Diary = ({
   user,
   triggerWrongUserPicUrlAlert,
   triggerChangeProfileAlert,
-  triggerCreateNewDiaryPageAlert,
-  triggerSaveAlert,
+  triggerCreateNewDiaryPageAlert
 }: Props) => {
   //all of the diary content is stored in this array
   const [diaryPages, setdiaryPages] = useState<page[]>([]);
-
   const [diaryName, setdiaryName] = useState("Diary of smiling pirate");
-  // const [images, setimages] = useState<Blob[]>([])
-  const [successfullSaveAlertOpen, setsuccessfullSaveAlertOpen] =
-    useState(false);
-  const [successProfilePictureAlertOpen, setsuccessProfilePictureAlertOpen] =
-    useState(false);
-  const [wrongUserPicAlertOpen, setwrongUserPicAlertOpen] = useState(false);
   const [activePageIndex, setactivePageIndex] = useState(0);
-  const [newPageAlertOpen, setnewPageAlertOpen] = useState(false);
-  const [userId, setuserId] = useState("");
 
+
+  const userId = user.uid;
+  console.log(userId, "this is the static? user id");
   const defaultUserName = "adventurer";
   const newUserFirstDiaryPage: page = {
     text: "This is your first diary page :) write as you wish",
     images: [],
   };
 
-  useEffect(() => {
-    async function getUserId() {
-      setuserId(await user.getIdToken(false));
-    }
-    getUserId();
-  }, []);
+
+
+
 
   //initial load of data from firestore database
   useEffect(() => {
@@ -72,7 +61,10 @@ const Diary = ({
 
         //if user does not have a firestore database create new firestore database
         if (!docSnap.exists()) {
+          console.log('creating the snap for the first time');
+
           await setDoc(docRef, {
+            //creating the diary name by refactoring user name and using default username in case that user did not input any
             diaryName:
               (user.displayName ? user.displayName : defaultUserName) +
               "'s diary",
@@ -91,28 +83,41 @@ const Diary = ({
         //if fetch to database was succesful
         if (diaryDataFromDatabase) {
           setdiaryName(diaryDataFromDatabase.diaryName);
-          console.log("last time i saw you");
+
+          console.log(diaryDataFromDatabase, 'i did some mistake, didnt I?');
 
           let newDiaryPages = await Promise.all(
             diaryDataFromDatabase.contents.map(
               async ({ text, images }: { text: string; images: string[] }) => {
                 try {
+
+                  console.log(images, "what are the images");
+
+                  const imagePromises = images.map(async (image) => {
+                    const refToImage = ref(storage, image)
+                    return await getBlob(refToImage)
+                  }
+                  )
+
                   const promises = await Promise.all(
-                    images.map(
-                      async (image) => await getBlob(ref(storage, image))
-                    )
+                    imagePromises
                   );
+
+                  console.log(promises, "moje promisy");
+
 
                   return {
                     images: promises,
                     text: text,
                   };
                 } catch (error) {
-                  console.log(error, "neeeeeee");
+                  alert('this is the place where the error is')
+                  console.log(error.message, "neeeeeee");
                 }
               }
             )
           );
+
 
           console.log(newDiaryPages, "tak a je to");
 
@@ -122,7 +127,7 @@ const Diary = ({
           alert("could not retrieve data from database");
         }
       } catch (error) {
-        console.log(error);
+        console.log(error, "got an error while getting data from database");
       }
     }
     if (userId) {
@@ -130,55 +135,68 @@ const Diary = ({
     }
   }, [userId]);
 
-  async function saveToDb() {
-    if (userId) {
-      //handling firestore saving
-      const docRef = doc(db, "users", userId);
+  async function saveToDb(userId: string) {
 
-      const diaryPagesCopy = [...diaryPages];
-      const reformedDiaryPages = diaryPagesCopy.map((page, index) => {
-        console.log(page, "log me page");
-        let imagesCopy = page.images;
-        const imagesReferences = imagesCopy.map((image, index) => {
-          //handling fire storage saving
-          const storageRef = ref(
-            storage,
-            `/${userId}/${activePageIndex}/image-${index}`
-          );
+    //handling firestore saving
+    const docRef = doc(db, "users", userId);
 
-          uploadBytes(storageRef, image).then((snapshot) => {
-            alert("Uploaded a blob or file!");
-          });
+    const diaryPagesCopy = [...diaryPages];
+    const reformedDiaryPages = diaryPagesCopy.map(async (page, index) => {
+      let imagesCopy = page.images;
 
-          return `/${userId}/${activePageIndex}/image-${index}`;
-        });
 
-        console.log("imagesCopy", imagesCopy);
+      console.log(imagesCopy, "this is imagesCopy");
 
-        const newPage = { text: page.text, images: imagesReferences };
-        // page.images = imagesReferences
 
-        return newPage;
+
+      const uploadBytesPromises = imagesCopy.map(async (image) => {
+        //handling fire storage saving
+        const storageRef = ref(
+          storage,
+          `/${userId}/${activePageIndex}/image-${index}`
+        );
+
+        await uploadBytes(storageRef, image)
       });
 
-      console.log(reformedDiaryPages, "NIMBUS 2000");
 
-      await setDoc(docRef, {
-        diaryName: diaryName,
-        username: user.displayName,
-        contents: reformedDiaryPages,
-      });
-    }
-  }
-  useEffect(() => {
-    saveToDb();
-    console.log("succesfully saved");
-  }, [diaryPages]);
+      console.log(uploadBytesPromises, "are these promises?");
 
-  async function save() {
-    await saveToDb();
-    triggerSaveAlert();
+      await Promise.all(uploadBytesPromises)
+
+
+      //saving images
+      const imagesReferences = imagesCopy.map((image: Blob, index: number) => {
+
+        return `/${userId}/${activePageIndex}/image-${index}`;
+      })
+
+      console.log(imagesReferences, "images references");
+
+
+      const newPage = { text: page.text, images: imagesReferences };
+
+      return newPage;
+    });
+
+    console.log(reformedDiaryPages, "NIMBUS 2000");
+
+    await setDoc(docRef, {
+      diaryName: diaryName,
+      username: user.displayName,
+      contents: reformedDiaryPages,
+    });
+
+    alert('everything was saved into database')
+
   }
+  // // useEffect(() => {
+  // //   saveToDb(userId);
+
+  // //   console.log("succesfully saved");
+  // // }, [diaryPages]);
+
+
 
   function deletePage() {
     if (
@@ -189,7 +207,7 @@ const Diary = ({
       const diaryPagesCopy = [...diaryPages];
       diaryPagesCopy.splice(activePageIndex, 1);
       // setdiaryPages(diaryPagesCopy)
-      saveToDb();
+      saveToDb(userId);
 
       if (activePageIndex !== 0) changePage(-1);
       else changePage(1);
@@ -202,7 +220,7 @@ const Diary = ({
     const diaryPagesCopy = [...diaryPages];
     diaryPagesCopy.push({ text: "New page content", images: [] });
     setdiaryPages(diaryPagesCopy);
-    await saveToDb();
+    await saveToDb(userId);
     changePage(+1);
     triggerCreateNewDiaryPageAlert();
   }
@@ -229,13 +247,13 @@ const Diary = ({
 
   return (
     <div className="app">
-      {/* <h1 className='title'>{diaryName}</h1> */}
+      <h1 className='title'>{diaryName}</h1>
 
-      <UserIconWithPopover
+      {/* <UserIconWithPopover
         triggerWrongUserPicUrlAlert={triggerWrongUserPicUrlAlert}
         triggerChangeProfileAlert={triggerChangeProfileAlert}
         user={user}
-      ></UserIconWithPopover>
+      ></UserIconWithPopover> */}
 
       {openedPage !== undefined ? (
         <Page
@@ -263,8 +281,11 @@ const Diary = ({
         diaryPagesLength={diaryPages.length}
         activePageIndex={activePageIndex}
         editMode={editMode}
-        save={save}
+        user={user}
+        triggerChangeProfileAlert={triggerChangeProfileAlert}
+        triggerWrongUserPicUrlAlert={triggerWrongUserPicUrlAlert}
       ></UserControls>
+      <button className="btn btn-primary" onClick={() => { saveToDb(userId) }}></button>
     </div>
   );
 };

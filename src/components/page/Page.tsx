@@ -48,7 +48,7 @@ const Page = (props: pageProps) => {
   return (
     <div className='page'>
 
-      <textarea readOnly={!props.editMode} onInput={(e) => {
+      <textarea wrap='off' readOnly={!props.editMode} onInput={(e) => {
         props.changePageTextValue(e.currentTarget.value)
       }} className='pageTextarea paper firstPaper text-content'>
         {props.text}
