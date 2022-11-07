@@ -142,27 +142,14 @@ const Diary = ({
 
     const diaryPagesCopy = [...diaryPages];
     const reformedDiaryPages = diaryPagesCopy.map(async (page, index) => {
-      let imagesCopy = page.images;
+      let imagesCopy = Object.assign(page.images);
 
 
       console.log(imagesCopy, "this is imagesCopy");
 
 
 
-      const uploadBytesPromises = imagesCopy.map(async (image) => {
-        //handling fire storage saving
-        const storageRef = ref(
-          storage,
-          `/${userId}/${activePageIndex}/image-${index}`
-        );
 
-        await uploadBytes(storageRef, image)
-      });
-
-
-      console.log(uploadBytesPromises, "are these promises?");
-
-      await Promise.all(uploadBytesPromises)
 
 
       //saving images
@@ -178,6 +165,24 @@ const Diary = ({
 
       return newPage;
     });
+    diaryPagesCopy.forEach(page => {
+      const imageCopy = Object.assign(page.images)
+      const uploadBytesPromises = imagesCopy.map(async (image) => {
+        //handling fire storage saving
+        const storageRef = ref(
+          storage,
+          `/${userId}/${activePageIndex}/image-${index}`
+        );
+
+        await uploadBytes(storageRef, image)
+      });
+    })
+
+
+
+    console.log(uploadBytesPromises, "are these promises?");
+
+    await Promise.all(uploadBytesPromises)
 
     console.log(reformedDiaryPages, "NIMBUS 2000");
 
