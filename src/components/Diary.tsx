@@ -10,7 +10,7 @@ import UserControls from "./userControls/UserControls";
 import UserIconWithPopover from "./userControls/UserIconWithPopover";
 import { LatLng } from "leaflet";
 import { storage, ref, uploadBytes, getBlob, listAll, auth } from "../firebase";
-
+import { UploadResult } from "firebase/storage"
 
 interface Props {
   editMode: boolean;
@@ -37,7 +37,6 @@ const Diary = ({
   const [diaryName, setdiaryName] = useState("Diary of smiling pirate");
   const [activePageIndex, setactivePageIndex] = useState(0);
 
-
   const userId = user.uid;
   console.log(userId, "this is the static? user id");
   const defaultUserName = "adventurer";
@@ -45,10 +44,6 @@ const Diary = ({
     text: "This is your first diary page :) write as you wish",
     images: [],
   };
-
-
-
-
 
   //initial load of data from firestore database
   useEffect(() => {
@@ -141,14 +136,11 @@ const Diary = ({
     const docRef = doc(db, "users", userId);
 
     const diaryPagesCopy = [...diaryPages];
-    const reformedDiaryPages = diaryPagesCopy.map(async (page, index) => {
+    const reformedDiaryPages = diaryPagesCopy.map((page, index) => {
       let imagesCopy = Object.assign(page.images);
 
 
       console.log(imagesCopy, "this is imagesCopy");
-
-
-
 
 
 
@@ -165,26 +157,36 @@ const Diary = ({
 
       return newPage;
     });
-    diaryPagesCopy.forEach(page => {
-      const imageCopy = Object.assign(page.images)
-      const uploadBytesPromises = imagesCopy.map(async (image) => {
+
+
+    const listOfUnfulfilledPromisesToUploadImagesToStorage: Array<Array<Promise<UploadResult>>> = []
+
+    diaryPagesCopy.forEach((page: page, diaryPageIndex: number) => {
+      listOfUnfulfilledPromisesToUploadImagesToStorage.push([])
+      page.images.forEach((image, index) => {
         //handling fire storage saving
         const storageRef = ref(
           storage,
-          `/${userId}/${activePageIndex}/image-${index}`
+          `/${userId}/${diaryPageIndex}/image-${index}`
         );
 
-        await uploadBytes(storageRef, image)
+        listOfUnfulfilledPromisesToUploadImagesToStorage[diaryPageIndex].push(uploadBytes(storageRef, image))
       });
     })
 
 
+    const promise4all = await Promise.all(
+      listOfUnfulfilledPromisesToUploadImagesToStorage.map(function (innerPromiseArray) {
+        return Promise.all(innerPromiseArray);
+      })
+    )
 
-    console.log(uploadBytesPromises, "are these promises?");
+    console.log(promise4all, "promise4all :( :((");
 
-    await Promise.all(uploadBytesPromises)
 
-    console.log(reformedDiaryPages, "NIMBUS 2000");
+    console.log(reformedDiaryPages, "reformed diary pages right before setDoc");
+
+
 
     await setDoc(docRef, {
       diaryName: diaryName,
