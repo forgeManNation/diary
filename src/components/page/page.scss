@@ -14,11 +14,25 @@ $paper-line: #94acd4;
   flex-wrap: wrap;
 }
 
-.addImagesActionButtons {
-  position: absolute;
-  padding: 0;
-  height: 10vh;
-  bottom: 10px;
+//page scrollbars
+.page {
+  /* Foreground, Background */
+  scrollbar-color: #999 #333;
+}
+// .page::-webkit-scrollbar {
+//   width: 10px; /* Mostly for vertical scrollbars */
+//   height: 10px; /* Mostly for horizontal scrollbars */
+// }
+.page::-webkit-scrollbar-thumb {
+  /* Foreground */
+  background: #999;
+  border-radius: 20px;
+}
+.page::-webkit-scrollbar-track {
+  /* Background */
+  border-radius: 20px;
+
+  background: #333;
 }
 
 .pageTextarea {
@@ -33,8 +47,6 @@ $paper-line: #94acd4;
   position: absolute;
 }
 .addImagesActionButtonsInnerContainer {
-  position: fixed;
-
   display: flex;
   flex-direction: row;
   justify-content: center;

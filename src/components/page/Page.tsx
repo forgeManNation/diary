@@ -4,7 +4,7 @@ import { faImage, faFileImage, faPlus, faRectangleAd, faAdd, faRectangleList, fa
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { getDownloadURL, getStorage, ref, listAll } from "firebase/storage";
 import { auth } from "../../firebase"
-import Images from './images/Images';
+import Images from './images/Gallery';
 
 interface pageProps {
   text: string,
@@ -59,15 +59,13 @@ const Page = (props: pageProps) => {
 
       <p className="paper secondPaper" >
 
-        {props.editMode ?
-          <div className="d-flex flex-column">
-            <Images images={props.images} changeImages={props.changePageImagesValue}></Images>
+
+        <div className="d-flex flex-column">
+          <Images editMode={props.editMode} images={props.images} changeImages={props.changePageImagesValue}></Images>
 
 
-          </div>
-          :
-          <></>
-        }
+        </div>
+
 
 
       </p>
