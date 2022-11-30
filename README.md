@@ -1,10 +1,7 @@
 # Online diary 
 
 ## About
-Online diary is a diary where you can add text, pictures and maps
-
-Analysis of competing hypotheses is a method by which you can take multiple different hypothesis about a certain fenomen and based on evidence common to all of the hypotheses
-enumerate probability of them to be the true one. This app then tryes to help user by automatically making this matrix online. Each user can have an indefinitive amount of analyses.
+Online diary is a diary where you can add text, pictures and maps on each of your pages. Pages are dynamicaly created by user.  
 
 
 ## Technology specification
