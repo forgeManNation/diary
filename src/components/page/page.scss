@@ -66,6 +66,8 @@ $paper-line: #94acd4;
   margin-bottom: 20px;
 }
 
+
+
 .paper {
   color: black;
   margin: 20px;
@@ -97,6 +99,24 @@ $paper-line: #94acd4;
   margin-left: 0px;
 }
 
+@media only screen and (max-width: 890px) {
+
+  .bookbinding{
+    background: transparent;
+    display: none;
+  }
+
+  .paper{
+    margin: 20px!important;
+  }
+
+
+}
+
+
+.text-content {
+  white-space: pre-wrap;
+}
 .text-content:focus {
   outline: 0px solid transparent;
 }
