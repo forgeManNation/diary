@@ -1,12 +1,9 @@
-import React, { SyntheticEvent, useEffect } from 'react'
+import React, { SyntheticEvent, useEffect, useState } from 'react'
 import { User } from 'firebase/auth'
 import { faUser, faXmark, faCheck, faImage } from '@fortawesome/free-solid-svg-icons'
 import { Popover, PopoverBody } from "reactstrap"
 import { signOut, auth, updateProfile } from "../../firebase"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
-
-
 
 interface Props {
   user: User,
@@ -17,10 +14,11 @@ interface Props {
 const UserIconWithPopover = ({ user, triggerChangeProfileAlert, triggerWrongUserPicUrlAlert }: Props) => {
 
 
-  const [changeProfilePictureInputOn, setchangeProfilePictureInputOn] = React.useState(false)
-  const [profilePicInputValue, setprofilePicInputValue] = React.useState("")
-  const [userTooltipOpen, setuserTooltipOpen] = React.useState(false)
-  const [isImageUrlValid, setisImageUrlValid] = React.useState(false)
+  const [changeProfilePictureInputOn, setchangeProfilePictureInputOn] = useState(false)
+  const [profilePicInputValue, setprofilePicInputValue] = useState("")
+  const [userTooltipOpen, setuserTooltipOpen] = useState(false)
+  const [isImageUrlValid, setisImageUrlValid] = useState(false)
+  const [changeDiaryNameInputOn, setchangeDiaryNameInputOn] = useState(false)
 
   function onProfilePicUrlChange(e: SyntheticEvent) {
     e.preventDefault()
@@ -82,20 +80,44 @@ const UserIconWithPopover = ({ user, triggerChangeProfileAlert, triggerWrongUser
         <PopoverBody>
           <h5 className="popoverUsername">{['user', null, ""].includes(user.displayName) ? user.email : user.displayName}</h5>
           <ul className='list-unstyled m-0 '>
-            <li role="button" onClick={() => { signOut(auth) }}>log off&nbsp;&nbsp;<FontAwesomeIcon icon={faUser} /></li>
-            <li role="button" >
-              <span onClick={() => { setchangeProfilePictureInputOn(!changeProfilePictureInputOn) }}>change profile picture&nbsp;&nbsp;<FontAwesomeIcon icon={faImage} /></span>
+
+
+          <li role="button" >
+            
+            <span onClick={() => { setchangeProfilePictureInputOn(!changeProfilePictureInputOn) }}>change profile picture&nbsp;&nbsp;<FontAwesomeIcon icon={faImage} /></span>
               &nbsp;&nbsp;{changeProfilePictureInputOn ?
                 <>
-                  <input onClick={onProfilePicUrlChange} value={profilePicInputValue} onChange={e => { setprofilePicInputValue(e.target.value) }} placeholder="add url to profile picture"></input>
+                  <input className = "form-control" type = "text"  onClick={onProfilePicUrlChange} value={profilePicInputValue} onChange={e => { setprofilePicInputValue(e.target.value) }} placeholder="add url to profile picture"></input>
                   &nbsp;&nbsp;
-                  <FontAwesomeIcon onClick={triggerChangeProfile} id="userIcon" icon={faCheck} />
+                  Apply&nbsp;<FontAwesomeIcon onClick={triggerChangeProfile} id="userIcon" icon={faCheck} />
                   &nbsp;&nbsp;
-                  <FontAwesomeIcon onClick={() => { setchangeProfilePictureInputOn(false) }} id="userIcon" icon={faXmark} />
+                  Cancel&nbsp;<FontAwesomeIcon onClick={() => { setchangeProfilePictureInputOn(false) }} id="userIcon" icon={faXmark} />
                 </>
                 :
                 <></>}
             </li>
+
+            <li role="button" onClick={() => { signOut(auth) }}>log off&nbsp;&nbsp;<FontAwesomeIcon icon={faUser} />
+             
+            </li>
+
+
+            <li role="button" >
+            <span onClick={() => { setchangeDiaryNameInputOn(!changeDiaryNameInputOn) }}>change diary name &nbsp;&nbsp;<FontAwesomeIcon icon={faImage} /></span>
+              &nbsp;&nbsp;{changeDiaryNameInputOn ?
+                <>
+                  <input className = "form-control" type = "text" onClick={onProfilePicUrlChange} value={profilePicInputValue} onChange={e => { setprofilePicInputValue(e.target.value) }} placeholder="new diary name"></input>
+                  &nbsp;&nbsp;
+                  <FontAwesomeIcon onClick={triggerChangeProfile} id="userIcon" icon={faCheck} />
+                  &nbsp;&nbsp;
+                  <FontAwesomeIcon onClick={() => { setchangeDiaryNameInputOn(false) }} id="userIcon" icon={faXmark} />
+                </>
+                :
+                <></>}
+            </li>
+
+
+
           </ul>
 
         </PopoverBody>
