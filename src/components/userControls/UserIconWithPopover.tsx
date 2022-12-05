@@ -106,11 +106,13 @@ const UserIconWithPopover = ({ user, triggerChangeProfileAlert, triggerWrongUser
             <span onClick={() => { setchangeDiaryNameInputOn(!changeDiaryNameInputOn) }}>change diary name &nbsp;&nbsp;<FontAwesomeIcon icon={faImage} /></span>
               &nbsp;&nbsp;{changeDiaryNameInputOn ?
                 <>
+                  <br/>
                   <input className = "form-control" type = "text" onClick={onProfilePicUrlChange} value={profilePicInputValue} onChange={e => { setprofilePicInputValue(e.target.value) }} placeholder="new diary name"></input>
+                  &nbsp;&nbsp;&nbsp;
+                  Apply&nbsp;<FontAwesomeIcon onClick={triggerChangeProfile} id="userIcon" icon={faCheck} />
                   &nbsp;&nbsp;
-                  <FontAwesomeIcon onClick={triggerChangeProfile} id="userIcon" icon={faCheck} />
-                  &nbsp;&nbsp;
-                  <FontAwesomeIcon onClick={() => { setchangeDiaryNameInputOn(false) }} id="userIcon" icon={faXmark} />
+                  Cancel&nbsp;<FontAwesomeIcon onClick={() => { setchangeDiaryNameInputOn(false) }} id="userIcon" icon={faXmark} />
+                  <br/>
                 </>
                 :
                 <></>}

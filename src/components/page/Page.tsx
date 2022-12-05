@@ -58,16 +58,9 @@ const Page = (props: pageProps) => {
       </div>
 
       <p className="paper secondPaper" >
-
-
         <div className="d-flex flex-column">
           <Images editMode={props.editMode} images={props.images} changeImages={props.changePageImagesValue}></Images>
-
-
         </div>
-
-
-
       </p>
 
 

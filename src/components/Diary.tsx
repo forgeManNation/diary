@@ -283,7 +283,9 @@ const Diary = ({
 
   return (
     <div className="app">
-      <h1 className='title'>{diaryName}</h1>
+      <div>
+        <h1 className='title'>{diaryName}</h1>
+      </div>
 
       {openedPage !== undefined ? (
         <Page
@@ -304,6 +306,8 @@ const Diary = ({
           icon={faArrowsSpin}
         />
       )}
+
+
       <UserControls
         deletePage={deletePage}
         createNewPage={createNewPage}

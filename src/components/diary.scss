@@ -1,12 +1,11 @@
 .app {
   background-image: url("../rainforest.jpeg");
   background-size: 100% auto;
-}
-
-input{
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
   
 }
-
 .addNewPageButton {
   position: absolute;
   margin: 10vh;

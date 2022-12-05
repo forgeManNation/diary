@@ -8,7 +8,6 @@ $paper-line: #94acd4;
   justify-content: center;
   flex-direction: row;
   align-items: center;
-  flex: 1 1 0px;
   min-width: 0;
   align-items: stretch;
   flex-wrap: wrap;
@@ -64,6 +63,7 @@ $paper-line: #94acd4;
   width: 10px;
   margin-top: 20px;
   margin-bottom: 20px;
+  height: 695px;
 }
 
 
@@ -71,9 +71,10 @@ $paper-line: #94acd4;
 .paper {
   color: black;
   margin: 20px;
-  height: 595px;
-  width: 420px;
-  padding: 35px 20px;
+  height: 695px;
+  width: 520px;
+  padding: 30px;
+  padding-left: 50px;
   background: repeating-linear-gradient(
     $paper-color,
     $paper-color 31px,
@@ -85,7 +86,6 @@ $paper-line: #94acd4;
   outline: 0;
   font-size: 22px;
   text-align: left;
-  padding-left: 10vh;
   word-wrap: break-word;
   overflow: auto;
   position: relative;
