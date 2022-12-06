@@ -46,6 +46,10 @@ const Diary = ({
     images: [],
   };
 
+  function changeDiaryName (newDiaryName : string) {
+    setdiaryName(newDiaryName)
+  }
+
 
 
   //initial load of data from firestore database
@@ -309,6 +313,7 @@ const Diary = ({
 
 
       <UserControls
+        changeDiaryName = {changeDiaryName}
         deletePage={deletePage}
         createNewPage={createNewPage}
         changePage={changePage}
@@ -319,7 +324,6 @@ const Diary = ({
         triggerChangeProfileAlert={triggerChangeProfileAlert}
         triggerWrongUserPicUrlAlert={triggerWrongUserPicUrlAlert}
       ></UserControls>
-      {/* <button className="btn btn-primary" onClick={() => { saveToDb(userId) }}></button> */}
     </div>
   );
 };

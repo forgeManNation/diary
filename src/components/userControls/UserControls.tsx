@@ -1,5 +1,5 @@
-import React from "react";
-import { Tooltip } from "reactstrap";
+import React from 'react'
+import { Tooltip } from 'reactstrap'
 import {
   faFilePen,
   faFloppyDisk,
@@ -10,24 +10,25 @@ import {
   faPen,
   faTrash,
   faMap,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useNavigate } from "react-router-dom";
-import "./userControls.scss";
-import UserIconWithPopover from "./UserIconWithPopover";
-import { User } from "firebase/auth"
+  faUser
+} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useNavigate } from 'react-router-dom'
+import './userControls.scss'
+import UserIconWithPopover from './UserIconWithPopover'
+import { User } from 'firebase/auth'
 
 interface Props {
-  editMode: boolean;
-  deletePage: () => void;
-  createNewPage: () => void;
-  activePageIndex: number;
-  diaryPagesLength: number;
-  changePage: (numToChangeIndex: number) => void;
-  triggerChangeProfileAlert: () => void;
-  triggerWrongUserPicUrlAlert: () => void;
-  user: User;
+  editMode: boolean
+  deletePage: () => void
+  createNewPage: () => void
+  activePageIndex: number
+  diaryPagesLength: number
+  changePage: (numToChangeIndex: number) => void
+  triggerChangeProfileAlert: () => void
+  triggerWrongUserPicUrlAlert: () => void
+  user: User,
+  changeDiaryName: (newDiaryName: string) => void
 }
 
 const UserControls = ({
@@ -39,53 +40,54 @@ const UserControls = ({
   createNewPage,
   triggerChangeProfileAlert,
   triggerWrongUserPicUrlAlert,
-  user
+  user,
+  changeDiaryName
 }: Props) => {
-  const [editTooltipOpen, seteditTooltipOpen] = React.useState(false);
-  const editIconRef = React.useRef(null);
-  const [deleteTooltipOpen, setdeleteTooltipOpen] = React.useState(false);
-  const saveIconRef = React.useRef(null);
+  const [editTooltipOpen, seteditTooltipOpen] = React.useState(false)
+  const editIconRef = React.useRef(null)
+  const [deleteTooltipOpen, setdeleteTooltipOpen] = React.useState(false)
+  const saveIconRef = React.useRef(null)
   const [disabledChevronTooltipOpen, setdisabledChevronTooltipOpen] =
-    React.useState(false);
+    React.useState(false)
   const [disabledChevronRightTooltipOpen, setdisabledChevronRightTooltipOpen] =
-    React.useState(false);
-  const navigate = useNavigate();
-  const disabledChevronRightRef = React.useRef(null);
+    React.useState(false)
+  const navigate = useNavigate()
+  const disabledChevronRightRef = React.useRef(null)
 
-  function changeEditModeOn() {
+  function changeEditModeOn () {
     if (editMode) {
-      navigate("/");
+      navigate('/')
     } else {
-      navigate("/edit");
+      navigate('/edit')
     }
   }
 
   return (
-    <div className="userControls">
-      <div className="userControlsRow">
+    <div className='userControls'>
+      <div className='userControlsRow'>
         {activePageIndex !== 0 ? (
           <FontAwesomeIcon
-            role="button"
+            role='button'
             onClick={() => {
-              changePage(-1);
+              changePage(-1)
             }}
-            size="lg"
+            size='lg'
             icon={faChevronLeft}
           />
         ) : (
           <>
-            <div id="disabledChevronLeft">
+            <div id='disabledChevronLeft'>
               <FontAwesomeIcon
-                role="button"
-                color="gray"
-                size="lg"
+                role='button'
+                color='gray'
+                size='lg'
                 icon={faChevronLeft}
               />
             </div>
             <Tooltip
-              placement="bottom"
+              placement='bottom'
               isOpen={disabledChevronTooltipOpen}
-              target="disabledChevronLeft"
+              target='disabledChevronLeft'
               toggle={() =>
                 setdisabledChevronTooltipOpen(!disabledChevronTooltipOpen)
               }
@@ -100,17 +102,17 @@ const UserControls = ({
         {activePageIndex !== diaryPagesLength - 1 ? (
           <FontAwesomeIcon
             onClick={() => changePage(1)}
-            role="button"
-            size="lg"
+            role='button'
+            size='lg'
             icon={faChevronRight}
           />
         ) : (
           <>
             <div onClick={createNewPage} ref={disabledChevronRightRef}>
-              <FontAwesomeIcon role="button" size="lg" icon={faPen} />
+              <FontAwesomeIcon role='button' size='lg' icon={faPen} />
             </div>
             <Tooltip
-              placement="bottom"
+              placement='bottom'
               isOpen={disabledChevronRightTooltipOpen}
               target={disabledChevronRightRef}
               toggle={() =>
@@ -124,25 +126,23 @@ const UserControls = ({
           </>
         )}
       </div>
-      &nbsp;
-      &nbsp;
-      <div className="userControlsRow">
+      &nbsp; &nbsp;
+      <div className='userControlsRow'>
         {editMode ? (
           <>
-            <div className="stopEditButton" onClick={changeEditModeOn}>
-              <span role="button">
-                <FontAwesomeIcon size="lg" icon={faBookReader} />
+            <div className='stopEditButton' onClick={changeEditModeOn}>
+              <span role='button'>
+                <FontAwesomeIcon size='lg' icon={faBookReader} />
                 &nbsp; Stop editing
               </span>
             </div>
             &nbsp; &nbsp;
-
-            <div role="button" id="saveButton" onClick={deletePage}>
-              <FontAwesomeIcon size="lg" ref={saveIconRef} icon={faTrash} />
+            <div role='button' id='saveButton' onClick={deletePage}>
+              <FontAwesomeIcon size='lg' ref={saveIconRef} icon={faTrash} />
               &nbsp; Delete
             </div>
             <Tooltip
-              placement="bottom"
+              placement='bottom'
               isOpen={deleteTooltipOpen}
               target={saveIconRef}
               toggle={() => setdeleteTooltipOpen(!deleteTooltipOpen)}
@@ -151,15 +151,15 @@ const UserControls = ({
             </Tooltip>
           </>
         ) : (
-          <div className="editButton" onClick={changeEditModeOn}>
+          <div className='editButton' onClick={changeEditModeOn}>
             <FontAwesomeIcon
-              role="button"
+              role='button'
               ref={editIconRef}
-              size="lg"
+              size='lg'
               icon={faPen}
             />
             <Tooltip
-              placement="bottom"
+              placement='bottom'
               isOpen={editTooltipOpen}
               target={editIconRef}
               toggle={() => seteditTooltipOpen(!editTooltipOpen)}
@@ -169,13 +169,17 @@ const UserControls = ({
           </div>
         )}
       </div>
-      &nbsp;
-      &nbsp;
-      <div className="userControlsRow userIconWithPopoverRow">
-        <UserIconWithPopover user={user} triggerChangeProfileAlert={triggerChangeProfileAlert} triggerWrongUserPicUrlAlert={triggerWrongUserPicUrlAlert}></UserIconWithPopover>
+      &nbsp; &nbsp;
+      <div className='userControlsRow userIconWithPopoverRow'>
+        <UserIconWithPopover
+        changeDiaryName = {changeDiaryName}
+          user={user}
+          triggerChangeProfileAlert={triggerChangeProfileAlert}
+          triggerWrongUserPicUrlAlert={triggerWrongUserPicUrlAlert}
+        ></UserIconWithPopover>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default UserControls;
+export default UserControls

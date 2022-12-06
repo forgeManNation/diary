@@ -9,16 +9,19 @@ interface Props {
   user: User,
   triggerChangeProfileAlert: () => void
   triggerWrongUserPicUrlAlert: () => void
+  changeDiaryName: (newDiaryName: string) => void
 }
 
-const UserIconWithPopover = ({ user, triggerChangeProfileAlert, triggerWrongUserPicUrlAlert }: Props) => {
+const UserIconWithPopover = ({ user, triggerChangeProfileAlert, triggerWrongUserPicUrlAlert, changeDiaryName }: Props) => {
 
 
   const [changeProfilePictureInputOn, setchangeProfilePictureInputOn] = useState(false)
-  const [profilePicInputValue, setprofilePicInputValue] = useState("")
+  const [profilePicInputValue, setprofilePicInputValue] = useState(user.photoURL !== null ? user.photoURL : "")
   const [userTooltipOpen, setuserTooltipOpen] = useState(false)
   const [isImageUrlValid, setisImageUrlValid] = useState(false)
   const [changeDiaryNameInputOn, setchangeDiaryNameInputOn] = useState(false)
+  const [changeDiaryNameInputValue, setchangeDiaryNameInputValue] = useState("")
+
 
   function onProfilePicUrlChange(e: SyntheticEvent) {
     e.preventDefault()
@@ -64,6 +67,34 @@ const UserIconWithPopover = ({ user, triggerChangeProfileAlert, triggerWrongUser
   }, [user.photoURL])
 
 
+  function triggerChangeDiaryName () {
+    changeDiaryName(profilePicInputValue)
+  }
+
+  const inputFormToChangeDiaryName = <>
+      <br/>
+      <input className = "form-control" type = "text" onClick={onProfilePicUrlChange} value={profilePicInputValue} onChange={e => { setchangeDiaryNameInputValue(e.target.value) }} placeholder="new diary name"></input>
+      &nbsp;&nbsp;&nbsp;
+      <span  onClick={triggerChangeDiaryName}>Apply&nbsp;<FontAwesomeIcon  id="userIcon" icon={faCheck} /></span>
+      &nbsp;&nbsp;
+      <span  onClick={() => {setchangeDiaryNameInputOn(false) }} >Cancel&nbsp;<FontAwesomeIcon id="userIcon" icon={faXmark} /></span>
+      <hr/>
+    </>
+
+
+const inputFormChangeProfilePicture =  <>
+<input className = "form-control" type = "text"  onClick={onProfilePicUrlChange} value={profilePicInputValue} onChange={e => { setprofilePicInputValue(e.target.value) }} placeholder="e. g. https://i.imgur.com/your_picture"></input>
+&nbsp;&nbsp;
+<span  onClick={triggerChangeProfile}>Apply&nbsp;<FontAwesomeIcon id="userIcon" icon={faCheck} /></span>
+&nbsp;&nbsp;
+<span onClick={() => { setchangeProfilePictureInputOn(false) }}>Cancel&nbsp;<FontAwesomeIcon  id="userIcon" icon={faXmark} /></span>
+<hr/>
+</>
+
+
+
+
+
   return (
     <>
       <span id="userIcon">
@@ -81,41 +112,23 @@ const UserIconWithPopover = ({ user, triggerChangeProfileAlert, triggerWrongUser
           <h5 className="popoverUsername">{['user', null, ""].includes(user.displayName) ? user.email : user.displayName}</h5>
           <ul className='list-unstyled m-0 '>
 
-
-          <li role="button" >
-            
-            <span onClick={() => { setchangeProfilePictureInputOn(!changeProfilePictureInputOn) }}>change profile picture&nbsp;&nbsp;<FontAwesomeIcon icon={faImage} /></span>
-              &nbsp;&nbsp;{changeProfilePictureInputOn ?
-                <>
-                  <input className = "form-control" type = "text"  onClick={onProfilePicUrlChange} value={profilePicInputValue} onChange={e => { setprofilePicInputValue(e.target.value) }} placeholder="add url to profile picture"></input>
-                  &nbsp;&nbsp;
-                  Apply&nbsp;<FontAwesomeIcon onClick={triggerChangeProfile} id="userIcon" icon={faCheck} />
-                  &nbsp;&nbsp;
-                  Cancel&nbsp;<FontAwesomeIcon onClick={() => { setchangeProfilePictureInputOn(false) }} id="userIcon" icon={faXmark} />
-                </>
-                :
-                <></>}
+            <li role="button" >
+              <span onClick={() => { setchangeProfilePictureInputOn(!changeProfilePictureInputOn) }}>
+              change profile picture&nbsp;&nbsp;<FontAwesomeIcon icon={faImage} /></span>
+              &nbsp;&nbsp;
+              {changeProfilePictureInputOn ? inputFormChangeProfilePicture : <></>}
+             
             </li>
 
-            <li role="button" onClick={() => { signOut(auth) }}>log off&nbsp;&nbsp;<FontAwesomeIcon icon={faUser} />
-             
+            <li role="button" onClick={() => { signOut(auth) }}>
+              log off&nbsp;&nbsp;<FontAwesomeIcon icon={faUser} />
             </li>
 
 
             <li role="button" >
-            <span onClick={() => { setchangeDiaryNameInputOn(!changeDiaryNameInputOn) }}>change diary name &nbsp;&nbsp;<FontAwesomeIcon icon={faImage} /></span>
-              &nbsp;&nbsp;{changeDiaryNameInputOn ?
-                <>
-                  <br/>
-                  <input className = "form-control" type = "text" onClick={onProfilePicUrlChange} value={profilePicInputValue} onChange={e => { setprofilePicInputValue(e.target.value) }} placeholder="new diary name"></input>
-                  &nbsp;&nbsp;&nbsp;
-                  Apply&nbsp;<FontAwesomeIcon onClick={triggerChangeProfile} id="userIcon" icon={faCheck} />
-                  &nbsp;&nbsp;
-                  Cancel&nbsp;<FontAwesomeIcon onClick={() => { setchangeDiaryNameInputOn(false) }} id="userIcon" icon={faXmark} />
-                  <br/>
-                </>
-                :
-                <></>}
+              <span onClick={() => { setchangeDiaryNameInputOn(!changeDiaryNameInputOn) }}>change diary name &nbsp;&nbsp;<FontAwesomeIcon icon={faImage} /></span>
+              &nbsp; &nbsp;
+              {changeDiaryNameInputOn ? inputFormToChangeDiaryName : <></>}
             </li>
 
 
