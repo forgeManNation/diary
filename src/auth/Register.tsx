@@ -27,7 +27,6 @@ const Register = () => {
         displayName: createdName,
         photoURL: profilePicUrl
       })
-
     }
     catch (err) {
 
@@ -39,11 +38,8 @@ const Register = () => {
 
       seterrorMessage(userMessage)
 
-
     }
-
   }
-
 
   return (
     <div className='w-full  d-flex justify-content-center align-content-center flex-wrap authBg'>

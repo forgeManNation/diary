@@ -10,7 +10,6 @@ import authErrors from './authErrors.json'
 
 interface Props {
   authErrors: { [key: string]: string }
-  // changeUser: (user: User) => void
 }
 
 const Login = () => {
@@ -27,7 +26,6 @@ const Login = () => {
 
 
     await signInWithEmailAndPassword(auth, email, password).then(
-
 
       userAuth => {
         console.log("succesfully logged in");

@@ -1,21 +1,17 @@
 import React, { useState } from 'react'
-import Diary from './components/Diary';
 import DiaryWithAlerts from './components/DiaryWithAlerts';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./auth/Login"
 import Register from "./auth/Register"
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { auth, signOut } from './firebase';
+import { auth } from './firebase';
 
 
 
 
 const App = () => {
 
-  // signOut(auth)
-
   const [user, setuser] = useState<User | null>(null)
-
 
 
   onAuthStateChanged(auth, (logged_user: User | null) => {
@@ -29,14 +25,6 @@ const App = () => {
   })
 
 
-
-
-
-  function changeUser(user: User | null) {
-    console.log(user, "i shall happen :P");
-
-    // setuser(user)
-  }
 
 
 
