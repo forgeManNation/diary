@@ -7,8 +7,6 @@ import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from './firebase';
 
 
-
-
 const App = () => {
 
   const [user, setuser] = useState<User | null>(null)
@@ -25,12 +23,8 @@ const App = () => {
   })
 
 
-
-
-
   return (
     <BrowserRouter>
-
       {
         user !== null ?
           <Routes>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMap, faImage } from '@fortawesome/free-solid-svg-icons'
+import { faMap, faImage, faMapLocation} from '@fortawesome/free-solid-svg-icons'
 import "./gallery.scss"
 import ModalAddGeolocation from "./ModalAddGeolocation"
 import { LatLng } from 'leaflet'
@@ -36,6 +36,9 @@ const Gallery = (props: galleryProps) => {
     <div>
       <div className='gallery'>
 
+      {/* <i className="bi bi-plus-circle-dotted"></i> */}
+
+
         {images.map((image: Blob, index) => <div className='galleryImageContainer' key={'image' + index}>
           <img alt="gallery item" className='galleryImage' width={"250px"} src={URL.createObjectURL(image)} />
           <span className='galleryImageTape' onClick={() => { removeGalleryItem(index) }}></span>
@@ -65,21 +68,24 @@ const Gallery = (props: galleryProps) => {
         {props.editMode ?
           <div className="addImagesActionButtons">
             <div className='addImagesActionButtonsInnerContainer'>
-              <button onClick={triggerModalAddGeolocationOpen} className=" btn addAdditionalFeatureButton">
+              {/* <button onClick={triggerModalAddGeolocationOpen} className=" btn addAdditionalFeatureButton">
                 <FontAwesomeIcon icon={faMap} />
                 &nbsp;
                 Add map
-              </button>
+              </button> */}
+              {/* <i className="bi bi-map  addAdditionalFeatureButton" onClick={triggerModalAddGeolocationOpen}></i> */}
+              <FontAwesomeIcon className='addAdditionalFeatureButton' icon={faMapLocation}  onClick={triggerModalAddGeolocationOpen}></FontAwesomeIcon>
               {/* get Zoom, mapLatLng, markerLatLng  */}
               <ModalAddGeolocation addMap={(newMapBlob) => { props.changeImages([...images, newMapBlob]) }} triggerModalAddGeolocationOpen={triggerModalAddGeolocationOpen} modalAddGeolocationOpen={modalAddGeolocationOpen}></ModalAddGeolocation>
 
               <label htmlFor="upload">
                 {/* add image icon */}
-                <div className='btn  addAdditionalFeatureButton'>
+                {/* <div className='btn  addAdditionalFeatureButton'>
                   <FontAwesomeIcon icon={faImage}></FontAwesomeIcon>
                   &nbsp;
                   Add picture
-                </div>
+                </div> */}
+                <FontAwesomeIcon icon={faImage} className = "addAdditionalFeatureButton" onClick={triggerModalAddGeolocationOpen}></FontAwesomeIcon>
               </label>
             </div>
           </div>

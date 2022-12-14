@@ -52,9 +52,13 @@ $paper-line: #94acd4;
 }
 
 .addAdditionalFeatureButton {
-  background: rgb(56, 63, 63) !important;
-  color: rgb(209, 194, 148) !important;
-  font-family: "Courier New", Courier, monospace;
+  cursor: pointer;
+  border-radius: 26px;
+  background: rgb(224, 223, 223) !important;
+  border: 2px solid rgb(221, 198, 136);
+  color: rgb(66, 65, 63) !important;
+  padding: 8px;
+  font-family: 'Source Sans Pro', "Courier New", Courier, monospace;
   margin: 10px;
 }
 
