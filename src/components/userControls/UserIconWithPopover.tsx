@@ -18,7 +18,7 @@ const UserIconWithPopover = ({ user, triggerChangeProfileAlert, triggerWrongUser
   const [profilePicInputValue, setprofilePicInputValue] = useState(user.photoURL !== null ? user.photoURL : "")
   const [userTooltipOpen, setuserTooltipOpen] = useState(false)
   const [isImageUrlValid, setisImageUrlValid] = useState(false)
-  const [changeDiaryNameInputOn, setchangeDiaryNameInputOn] = useState(false)
+  const [diaryNameInputOpen, setdiaryNameInputOpen] = useState(false)
   const [diaryNameInputValue, setdiaryNameInputValue] = useState("")
 
 
@@ -44,6 +44,8 @@ const UserIconWithPopover = ({ user, triggerChangeProfileAlert, triggerWrongUser
     else {
       triggerWrongUserPicUrlAlert()
     }
+
+    setchangeProfilePictureInputOn(false)
   }
 
   async function checkImage(url: string) {
@@ -54,7 +56,6 @@ const UserIconWithPopover = ({ user, triggerChangeProfileAlert, triggerWrongUser
     if (buff.type.startsWith('image/')) {
       setisImageUrlValid(true)
     }
-
   }
 
 
@@ -68,6 +69,7 @@ const UserIconWithPopover = ({ user, triggerChangeProfileAlert, triggerWrongUser
 
   function triggerChangeDiaryName() {
     changeDiaryName(diaryNameInputValue)
+    setdiaryNameInputOpen(false);
   }
 
   const inputFormToChangeDiaryName = <>
@@ -76,7 +78,7 @@ const UserIconWithPopover = ({ user, triggerChangeProfileAlert, triggerWrongUser
     &nbsp;&nbsp;&nbsp;
     <span onClick={triggerChangeDiaryName}>Apply&nbsp;<FontAwesomeIcon id="userIcon" icon={faCheck} /></span>
     &nbsp;&nbsp;
-    <span onClick={() => { setchangeDiaryNameInputOn(false) }} >Cancel&nbsp;<FontAwesomeIcon id="userIcon" icon={faXmark} /></span>
+    <span onClick={() => { setdiaryNameInputOpen(false) }} >Cancel&nbsp;<FontAwesomeIcon id="userIcon" icon={faXmark} /></span>
     <hr />
   </>
 
@@ -111,21 +113,18 @@ const UserIconWithPopover = ({ user, triggerChangeProfileAlert, triggerWrongUser
                 change profile picture&nbsp;&nbsp;<FontAwesomeIcon icon={faImage} /></span>
               &nbsp;&nbsp;
               {changeProfilePictureInputOn ? inputFormChangeProfilePicture : <></>}
+            </li>
 
+            <li role="button" >
+              <span onClick={() => { setdiaryNameInputOpen(!diaryNameInputOpen) }}>change diary name &nbsp;&nbsp;<FontAwesomeIcon icon={faFileText} /></span>
+              &nbsp; &nbsp;
+              {diaryNameInputOpen ? inputFormToChangeDiaryName : <></>}
             </li>
 
             <li role="button" onClick={() => { signOut(auth) }}>
               log off&nbsp;&nbsp;<FontAwesomeIcon icon={faUser} />
             </li>
-
-
-            <li role="button" >
-              <span onClick={() => { setchangeDiaryNameInputOn(!changeDiaryNameInputOn) }}>change diary name &nbsp;&nbsp;<FontAwesomeIcon icon={faFileText} /></span>
-              &nbsp; &nbsp;
-              {changeDiaryNameInputOn ? inputFormToChangeDiaryName : <></>}
-            </li>
           </ul>
-
         </PopoverBody>
       </Popover>
     </>

@@ -1,12 +1,11 @@
 import React, { useRef, useState, useEffect } from "react";
-import Page from "./page/Page";
-import "./diary.scss";
+import Pages from "./pages/Pages";
+import UserControls from "./userControls/UserControls";
+import "./diaryApp.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsSpin } from "@fortawesome/free-solid-svg-icons";
-import { db, getDoc, setDoc, doc } from "../firebase";
 import { User } from "firebase/auth";
-import UserControls from "./userControls/UserControls";
-import { storage, ref, uploadBytes, getBlob } from "../firebase";
+import { storage, ref, uploadBytes, getBlob, db, getDoc, setDoc, doc } from "../firebase";
 import { UploadResult } from "firebase/storage"
 
 interface Props {
@@ -55,7 +54,7 @@ const Diary = ({
 
   //initial load of data from firestore database
   useEffect(() => {
-    //initial load of data from firestore database
+
     async function getDataFromDb() {
       try {
         //adding a reference to firestore users collection
@@ -92,7 +91,6 @@ const Diary = ({
           setdiaryName(diaryDataFromFirestoreDatabase.diaryName);
 
 
-
           /* than it is needed to get the data that are stored in firestore as 
           string references and asynchronously get them from fire storage
           */
@@ -109,7 +107,7 @@ const Diary = ({
               //reference object to firebase storage
               const imageStorageReference = ref(storage, imageReference)
 
-              //call to get image from sotrage
+              //call to get image from storage
               return getBlob(imageStorageReference)
             })
 
@@ -130,19 +128,15 @@ const Diary = ({
 
             //replacing firestore string reference with loaded images
             let newDiaryPageImages = diaryPage.images.map((imageReference, imageIndex) => {
-
               let loadedImage = retrievedImages[pageIndex][imageIndex];
               return loadedImage
             }
             );
-
             //creating the final object
             const newDiaryPage = diaryPage;
             newDiaryPage.images = newDiaryPageImages;
             return newDiaryPage
           })
-
-
           setdiaryPages(newDiaryPages);
         } else {
           alert("could not retrieve data from database");
@@ -156,48 +150,6 @@ const Diary = ({
     }
   }, [userId]);
 
-  async function saveToDb(userId: string) {
-
-    //handling firestore saving
-    const docRef = doc(db, "users", userId);
-
-    const diaryPagesCopy = [...diaryPages];
-    const reformedDiaryPages = diaryPagesCopy.map((page, pageIndex) => {
-      const imagesCopy = Object.assign(page.images);
-
-      //saving images
-      const imagesReferences = imagesCopy.map((image: Blob, index: number) => {
-        return `/${userId}/${pageIndex}/image-${index}`;
-      })
-
-      const newPage = { text: page.text, images: imagesReferences };
-      return newPage;
-    });
-
-
-    const listOfUnfulfilledPromisesToUploadImagesToStorage: Array<Array<Promise<UploadResult>>> = []
-
-    diaryPagesCopy.forEach((page: page, diaryPageIndex: number) => {
-      listOfUnfulfilledPromisesToUploadImagesToStorage.push([])
-      page.images.forEach((image, index) => {
-        //handling fire storage saving
-        const storageRef = ref(
-          storage,
-          `/${userId}/${diaryPageIndex}/image-${index}`
-        );
-
-        listOfUnfulfilledPromisesToUploadImagesToStorage[diaryPageIndex].push(uploadBytes(storageRef, image))
-      });
-    })
-
-    await setDoc(docRef, {
-      diaryName: diaryName,
-      username: user.displayName,
-      contents: reformedDiaryPages,
-    });
-
-  }
-
   /* 
   this use effect handles saving data into the database,
   it fires everytime diaryPages change and it does not
@@ -208,6 +160,49 @@ const Diary = ({
   const initialRender = useRef(true);
 
   useEffect(() => {
+
+    async function saveToDb(userId: string) {
+
+      //handling firestore saving
+      const docRef = doc(db, "users", userId);
+
+      const diaryPagesCopy = [...diaryPages];
+      const reformedDiaryPages = diaryPagesCopy.map((page, pageIndex) => {
+        const imagesCopy = Object.assign(page.images);
+
+        //saving images
+        const imagesReferences = imagesCopy.map((image: Blob, index: number) => {
+          return `/${userId}/${pageIndex}/image-${index}`;
+        })
+
+        const newPage = { text: page.text, images: imagesReferences };
+        return newPage;
+      });
+
+
+      const listOfUnfulfilledPromisesToUploadImagesToStorage: Array<Array<Promise<UploadResult>>> = []
+
+      diaryPagesCopy.forEach((page: page, diaryPageIndex: number) => {
+        listOfUnfulfilledPromisesToUploadImagesToStorage.push([])
+        page.images.forEach((image, index) => {
+          //handling fire storage saving
+          const storageRef = ref(
+            storage,
+            `/${userId}/${diaryPageIndex}/image-${index}`
+          );
+
+          listOfUnfulfilledPromisesToUploadImagesToStorage[diaryPageIndex].push(uploadBytes(storageRef, image))
+        });
+      })
+
+      await setDoc(docRef, {
+        diaryName: diaryName,
+        username: user.displayName,
+        contents: reformedDiaryPages,
+      });
+
+    }
+
     if (initialRender.current) {
       initialRender.current = false;
     }
@@ -225,7 +220,6 @@ const Diary = ({
     ) {
       const diaryPagesCopy = [...diaryPages];
       diaryPagesCopy.splice(activePageIndex, 1);
-      saveToDb(userId);
 
       if (activePageIndex !== 0) changePage(-1);
       else changePage(1);
@@ -238,7 +232,6 @@ const Diary = ({
     const diaryPagesCopy = [...diaryPages];
     diaryPagesCopy.push({ text: "New page content", images: [] });
     setdiaryPages(diaryPagesCopy);
-    await saveToDb(userId);
     changePage(+1);
     triggerCreateNewDiaryPageAlert();
   }
@@ -270,7 +263,7 @@ const Diary = ({
       </div>
 
       {openedPage !== undefined ? (
-        <Page
+        <Pages
           editMode={editMode}
           changePageImagesValue={changePageImagesValue}
           changePageTextValue={changePageTextValue}
@@ -280,6 +273,7 @@ const Diary = ({
           images={openedPage.images}
         />
       ) : (
+        //spinning icon while data are loading from database
         <FontAwesomeIcon
           className="spinningIcon  fa-spin"
           role="button"
@@ -288,7 +282,6 @@ const Diary = ({
           icon={faArrowsSpin}
         />
       )}
-
 
       <div className="userControlsSegment">
         <UserControls

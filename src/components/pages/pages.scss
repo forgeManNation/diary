@@ -1,8 +1,8 @@
-//paper page styling
-$paper-color: #f1ede9;
-$paper-line: #94acd4;
-
 :root {
+  //paper page styling
+  --paper-color: #f1ede9;
+  --paper-line: #94acd4;
+
   --diary-height: 695px;
   --diary-height: 595px;
   --diary-width: 420px;
@@ -78,7 +78,6 @@ $paper-line: #94acd4;
 }
 
 .paper {
-  border-radius: 4px 1px 1px 4px;
   border: 2px solid rgb(216, 216, 216);
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   color: rgb(30, 30, 30);
@@ -88,10 +87,10 @@ $paper-line: #94acd4;
   padding: 30px;
   padding-left: 50px;
   background: repeating-linear-gradient(
-    $paper-color,
-    $paper-color 31px,
-    $paper-line 31px,
-    $paper-line 32px
+    var(--paper-color),
+    var(--paper-color) 31px,
+    var(--paper-line) 31px,
+    var(--paper-line) 32px
   );
   font-family: "Yuji Boku";
   line-height: 32px;
@@ -104,16 +103,20 @@ $paper-line: #94acd4;
 }
 
 .firstPaper {
+  //fist paper has rounded corners on the left side
+  border-radius: 4px 1px 1px 4px;
   margin-right: 0px;
 }
 
 .secondPaper {
+  //second paper has rounded corners on the right side
   border-radius: 1px 4px 4px 1px;
-
   margin-left: 0px;
 }
 
 @media only screen and (max-width: 890px) {
+  //if screen is smaller that certain size, papers will be below each other
+  //which means that bookbinding must be hidden
   .bookbinding {
     background: transparent;
     display: none;
@@ -129,11 +132,4 @@ $paper-line: #94acd4;
 }
 .text-content:focus {
   outline: 0px solid transparent;
-}
-
-.hiddenInput {
-  visibility: hidden;
-  width: 0;
-  height: 0;
-  position: absolute;
 }

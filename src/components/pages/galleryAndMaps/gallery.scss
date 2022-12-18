@@ -32,4 +32,9 @@
       transform: translateX(-30%) translateY(10%) rotate(-45deg);
     }
   }
+
+  //hiddent input to add picture  - the actual adding is solved by label
+  .hiddenInput {
+    display: none;
+  }
 }

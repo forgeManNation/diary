@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import DiaryWithAlerts from './components/DiaryWithAlerts';
+import React, { useState, useEffect } from 'react'
+import DiaryAppWithAlerts from './components/DiaryAppWithAlerts';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./auth/Login"
 import Register from "./auth/Register"
@@ -11,14 +11,17 @@ const App = () => {
 
   const [user, setuser] = useState<User | null>(null)
 
-  onAuthStateChanged(auth, (logged_user: User | null) => {
-    if (logged_user) {
-      setuser(logged_user)
-    }
-    else {
-      setuser(null)
-    }
-  })
+  //onAuthtateChanged is a listener so it is in useEffect{...}[] to be added only on initial load
+  useEffect(() => {
+    onAuthStateChanged(auth, (logged_user: User | null) => {
+      if (logged_user) {
+        setuser(logged_user)
+      }
+      else {
+        setuser(null)
+      }
+    })
+  }, [])
 
 
   return (
@@ -26,8 +29,8 @@ const App = () => {
       {
         user !== null ?
           <Routes>
-            <Route path="/" element={<DiaryWithAlerts user={user} editMode={false} />} />
-            <Route path="edit" element={<DiaryWithAlerts user={user} editMode={true} />} />
+            <Route path="/" element={<DiaryAppWithAlerts user={user} editMode={false} />} />
+            <Route path="edit" element={<DiaryAppWithAlerts user={user} editMode={true} />} />
             <Route path="/*" element={<Navigate to="/" />} />
           </Routes>
           :

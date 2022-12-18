@@ -48,7 +48,7 @@ const Register = () => {
   return (
     <div className='w-full  d-flex justify-content-center align-content-center flex-wrap authBg'>
       <div className='mainAuthContainer bg-light p-5 pt-4 pb-0'  >
-        <h3 className='pb-2'>Register in to<br /><strong>travellers diary</strong></h3>
+        <h3 className='pb-2'>Register in to<br /><strong>traveller's diary</strong></h3>
         <div className="mb-3">
           <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
           <input type="email" value={email} onChange={(e) => { setemail(e.target.value) }} className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />

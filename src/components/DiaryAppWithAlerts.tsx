@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import "./diary.scss";
 import { Alert } from "reactstrap";
 import { User } from "firebase/auth";
-import Diary from "./Diary";
+import DiaryApp from "./DiaryApp";
+import "./diaryAppWithAlerts.css"
 
 interface Props {
   editMode: boolean;
@@ -17,6 +17,10 @@ const DiaryWithAlerts = ({ editMode, user }: Props) => {
   const [changeNameAlertOpen, setchangeNameAlertOpen] = useState(false);
 
 
+  //time alert will be shown by default in miliseconds
+  const alertShownTime = 5000;
+
+
   //timer ID -> used for clearing timeout when the data are saved to early
   let triggerCreateNewDiaryPageAlerttimerID: ReturnType<typeof setTimeout>;
   function triggerCreateNewDiaryPageAlert() {
@@ -26,7 +30,7 @@ const DiaryWithAlerts = ({ editMode, user }: Props) => {
 
     triggerCreateNewDiaryPageAlerttimerID = setTimeout(function () {
       setnewPageAlertOpen(false);
-    }, 5000);
+    }, alertShownTime);
   }
 
   //timer ID -> used for clearing timeout when the data are saved to early
@@ -36,17 +40,17 @@ const DiaryWithAlerts = ({ editMode, user }: Props) => {
     setsuccessProfilePictureAlertOpen(true);
     changeProfileAlerttimerID = setTimeout(function () {
       setsuccessProfilePictureAlertOpen(false);
-    }, 5000);
+    }, alertShownTime);
   }
 
   //timer ID -> used for clearing timeout when the data are saved to early
-  let changeWrongUserPicID: ReturnType<typeof setTimeout>;
+  let changeWrongUserPicTimerID: ReturnType<typeof setTimeout>;
   function triggerWrongUserPicUrlAlert() {
-    clearTimeout(changeWrongUserPicID);
+    clearTimeout(changeWrongUserPicTimerID);
     setwrongUserPicAlertOpen(true);
-    changeWrongUserPicID = setTimeout(function () {
+    changeWrongUserPicTimerID = setTimeout(function () {
       setwrongUserPicAlertOpen(false);
-    }, 5000);
+    }, alertShownTime);
   }
 
   //timer ID -> used for clearing timeout when the data are saved to early
@@ -56,12 +60,12 @@ const DiaryWithAlerts = ({ editMode, user }: Props) => {
     setchangeNameAlertOpen(true);
     changeNameAlerttimerID = setTimeout(function () {
       setchangeNameAlertOpen(false);
-    }, 5000);
+    }, alertShownTime);
   }
 
   return (
     <div>
-      <Diary
+      <DiaryApp
         editMode={editMode}
         user={user}
         triggerChangeNameAlert={triggerChangeNameAlert}
@@ -73,7 +77,6 @@ const DiaryWithAlerts = ({ editMode, user }: Props) => {
       <div className="alertBox">
 
         <Alert
-          className="alert"
           isOpen={newPageAlertOpen}
           toggle={() => {
             setnewPageAlertOpen(false);
@@ -84,20 +87,17 @@ const DiaryWithAlerts = ({ editMode, user }: Props) => {
         </Alert>
 
         <Alert
-          className="alert"
           isOpen={successProfilePictureAlertOpen}
           toggle={() => {
             setsuccessProfilePictureAlertOpen(false);
           }}
           color="success"
         >
-          Profile picture updated!
+          Succesfully updated profile picture!
         </Alert>
 
 
-
         <Alert
-          className="alert"
           isOpen={changeNameAlertOpen}
           toggle={() => {
             setchangeNameAlertOpen(false);
@@ -109,14 +109,13 @@ const DiaryWithAlerts = ({ editMode, user }: Props) => {
 
 
         <Alert
-          className="alert"
           isOpen={wrongUserPicAlertOpen}
           toggle={() => {
             setwrongUserPicAlertOpen(false);
           }}
           color="danger"
         >
-          Can not update profile picture!
+          Can't update profile picture. Try different URL.
         </Alert>
       </div>
     </div>

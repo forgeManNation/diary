@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import "./page.scss";
+import "./pages.scss";
 import { getDownloadURL, getStorage, ref, listAll } from "firebase/storage";
 import { auth } from "../../firebase"
 import GalleryAndMaps from './galleryAndMaps/GalleryAndMaps';
 
-interface pageProps {
+interface pagesProps {
   text: string,
   index: number,
   editMode: boolean,
@@ -14,7 +14,7 @@ interface pageProps {
 }
 
 
-const Page = (props: pageProps) => {
+const Pages = (props: pagesProps) => {
 
   const [galleryPictures, setgalleryPictures] = useState<string[]>([])
 
@@ -64,4 +64,4 @@ const Page = (props: pageProps) => {
   )
 }
 
-export default Page
+export default Pages

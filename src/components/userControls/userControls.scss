@@ -10,8 +10,8 @@
 }
 
 .userControlsRow {
-  background-color: rgb(249, 248, 246);
-  background-color: rgb(239, 239, 239);
+  margin-left: 12px;
+  margin-right: 12px;
   background-color: rgb(56, 63, 63);
   color: rgb(209, 194, 148);
   padding: 2vh;
@@ -29,31 +29,18 @@
 
   border: 1px solid gray;
 }
-.userIconWithPopoverRow {
-  overflow: visible;
-  position: relative;
-  .userImage {
-    border-radius: 25px;
-    height: 30px;
-    width: auto;
-  }
 
-  .popoverUsername {
-    text-align: center;
-  }
+li:hover {
+  color: #504821 !important;
+}
 
-  li {
-    padding: 5px;
-    border-radius: 5px;
-    text-align: center;
-  }
-  .trashIcon {
-    z-index: 5;
-    position: absolute;
-    top: 3vh;
-    right: 3vh;
-  }
-  li:hover {
-    background-color: rgb(240, 238, 238);
-  }
+.pageNumber {
+  margin-left: 12px;
+  margin-right: 12px;
+}
+
+.userImage {
+  border-radius: 25px;
+  height: 30px;
+  width: auto;
 }

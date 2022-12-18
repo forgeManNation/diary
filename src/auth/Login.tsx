@@ -33,7 +33,7 @@ const Login = () => {
   return (
     <div className='w-full  d-flex justify-content-center align-content-center flex-wrap authBg'>
       <div className='mainAuthContainer bg-light p-5 pt-4 pb-1'>
-        <h3 className='pb-2 pr-4 '>Sign in to <br /><strong>travellers diary</strong></h3>
+        <h3 className='pb-2 pr-4 '>Sign in to <br /><strong>traveller's diary</strong></h3>
         <div className="mb-3">
           <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
           <input type="email" value={email} onChange={(e) => { setemail(e.target.value) }} className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
@@ -44,7 +44,6 @@ const Login = () => {
           <input type="password" value={password} onChange={(e) => { setpassword(e.target.value) }} className="form-control" id="exampleInputPassword1" />
         </div>
         <div className="mb-3 form-check">
-
           <p >No account? <span role="button" className='text-primary' onClick={() => { navigate("register", { replace: true }); }}>Register instead</span> </p>
         </div>
         <button onClick={logIn} className="authActionButton btn  btn-outline-dark">Sign in</button>

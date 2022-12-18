@@ -6,7 +6,6 @@ import {
   faChevronRight,
   faPen,
   faTrash,
-
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useNavigate } from 'react-router-dom'
@@ -39,16 +38,20 @@ const UserControls = ({
   user,
   changeDiaryName
 }: Props) => {
-  const [editTooltipOpen, seteditTooltipOpen] = React.useState(false)
+
   const editIconRef = React.useRef(null)
-  const [deleteTooltipOpen, setdeleteTooltipOpen] = React.useState(false)
   const saveIconRef = React.useRef(null)
+  const disabledChevronRightRef = React.useRef(null)
+
+  const [editTooltipOpen, seteditTooltipOpen] = React.useState(false)
+  const [deleteTooltipOpen, setdeleteTooltipOpen] = React.useState(false)
   const [disabledChevronTooltipOpen, setdisabledChevronTooltipOpen] =
     React.useState(false)
   const [disabledChevronRightTooltipOpen, setdisabledChevronRightTooltipOpen] =
     React.useState(false)
+
+
   const navigate = useNavigate()
-  const disabledChevronRightRef = React.useRef(null)
 
   function changeEditModeOn() {
     if (editMode) {
@@ -92,9 +95,7 @@ const UserControls = ({
             </Tooltip>
           </>
         )}
-        &nbsp; &nbsp;
-        {activePageIndex + 1} / {diaryPagesLength}
-        &nbsp; &nbsp;
+        <span className='pageNumber'> {activePageIndex + 1} / {diaryPagesLength}</span>
         {activePageIndex !== diaryPagesLength - 1 ? (
           <FontAwesomeIcon
             onClick={() => changePage(1)}
@@ -122,7 +123,6 @@ const UserControls = ({
           </>
         )}
       </div>
-      &nbsp; &nbsp;
       <div className='userControlsRow'>
         {editMode ? (
           <>
@@ -158,19 +158,11 @@ const UserControls = ({
               size='lg'
               icon={faPen}
             />
-            <Tooltip
-              placement='bottom'
-              isOpen={editTooltipOpen}
-              target={editIconRef}
-              toggle={() => seteditTooltipOpen(!editTooltipOpen)}
-            >
-              turn edit mode on
-            </Tooltip>
+
           </div>
         )}
       </div>
-      &nbsp; &nbsp;
-      <div className='userControlsRow userIconWithPopoverRow'>
+      <div className='userControlsRow'>
         <UserIconWithPopover
           changeDiaryName={changeDiaryName}
           user={user}
