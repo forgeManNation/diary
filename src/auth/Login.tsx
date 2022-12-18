@@ -1,16 +1,10 @@
-import { stringLength } from '@firebase/util'
-import { faExclamation, faExclamationCircle, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { User } from 'firebase/auth'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { auth, signInWithEmailAndPassword } from '../firebase'
 import authErrors from './authErrors.json'
 
-
-interface Props {
-  authErrors: { [key: string]: string }
-}
 
 const Login = () => {
 
@@ -20,18 +14,10 @@ const Login = () => {
   const [password, setpassword] = useState("")
   const [errorMessage, seterrorMessage] = useState("")
 
-  //sign in to firebase than change the high order User object with retrieved data
-  //TODO: add functionality fow when the login fails
+  //sign in to firebase
   async function logIn() {
 
-
-    await signInWithEmailAndPassword(auth, email, password).then(
-
-      userAuth => {
-        console.log("succesfully logged in");
-
-      }
-    )
+    await signInWithEmailAndPassword(auth, email, password)
       .catch(err => {
 
         //slicing the message to part which authErrors object has as key
@@ -61,7 +47,6 @@ const Login = () => {
 
           <p >No account? <span role="button" className='text-primary' onClick={() => { navigate("register", { replace: true }); }}>Register instead</span> </p>
         </div>
-        {/* <p className='errorMessage'>{errorMessage}</p> */}
         <button onClick={logIn} className="authActionButton btn  btn-outline-dark">Sign in</button>
 
 
@@ -77,9 +62,6 @@ const Login = () => {
           :
           <></>
         }
-
-
-
 
       </div>
     </div>

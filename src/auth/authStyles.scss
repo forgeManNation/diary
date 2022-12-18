@@ -1,6 +1,6 @@
 .authBg {
   background-color: whitesmoke;
-  background-image: url(./adventure_bg.jpg);
+  background-image: url(../adventure_bg.jpg);
   background-repeat: no-repeat;
   background-size: cover;
   min-height: 100vh;
@@ -25,7 +25,6 @@
         margin: 0;
         padding: 5px;
         text-align: center;
-        // line-height: 50px;
         color: #fff;
       }
     }

@@ -4,14 +4,10 @@ import "./diary.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsSpin } from "@fortawesome/free-solid-svg-icons";
 import { db, getDoc, setDoc, doc } from "../firebase";
-import { Alert } from "reactstrap";
 import { User } from "firebase/auth";
 import UserControls from "./userControls/UserControls";
-import UserIconWithPopover from "./userControls/UserIconWithPopover";
-import { LatLng } from "leaflet";
-import { storage, ref, uploadBytes, getBlob, listAll, auth } from "../firebase";
+import { storage, ref, uploadBytes, getBlob } from "../firebase";
 import { UploadResult } from "firebase/storage"
-import { log } from "console";
 
 interface Props {
   editMode: boolean;
@@ -35,16 +31,20 @@ const Diary = ({
   triggerCreateNewDiaryPageAlert,
   triggerChangeNameAlert,
 }: Props) => {
+
+
+  const diaryPageInitialText = "This is your first diary page :) write as you wish";
+
   //all of the diary content is stored in this array
   const [diaryPages, setdiaryPages] = useState<page[]>([]);
+
   const [diaryName, setdiaryName] = useState("");
   const [activePageIndex, setactivePageIndex] = useState(0);
 
   const userId = user.uid;
-  console.log(userId, "this is the static? user id");
   const defaultUserName = "adventurer";
   const newUserFirstDiaryPage: page = {
-    text: "This is your first diary page :) write as you wish",
+    text: diaryPageInitialText,
     images: [],
   };
 
@@ -53,20 +53,16 @@ const Diary = ({
     triggerChangeNameAlert()
   }
 
-
-
   //initial load of data from firestore database
   useEffect(() => {
     //initial load of data from firestore database
     async function getDataFromDb() {
       try {
-
         //adding a reference to firestore users collection
         const docRef = doc(db, "users", userId);
 
         //asynchronously getting the data from user's firestore database
         let docSnap = await getDoc(docRef);
-
 
         //if user does not have a firestore database then create new firestore database for him
         if (!docSnap.exists()) {
@@ -101,8 +97,6 @@ const Diary = ({
           string references and asynchronously get them from fire storage
           */
 
-
-
           //this shall create an array of promises to firebase storage, one array item is a promise to all images in one page
           const newDiaryPagesImagePromises = diaryDataFromFirestoreDatabase.contents.map((firestorePage: { images: string[], text: string }, index: number) => {
 
@@ -123,11 +117,8 @@ const Diary = ({
             return Promise.all(imagesWaiting)
           })
 
-
-
           //resolving all of the promises to firebase storage
           const retrievedImages = await Promise.all(newDiaryPagesImagePromises)
-
 
           /*after data from firestore and fire storage are loaded,
            it is needed to create new diary pages object that would merge
@@ -147,9 +138,7 @@ const Diary = ({
 
             //creating the final object
             const newDiaryPage = diaryPage;
-
             newDiaryPage.images = newDiaryPageImages;
-
             return newDiaryPage
           })
 
@@ -159,7 +148,7 @@ const Diary = ({
           alert("could not retrieve data from database");
         }
       } catch (error) {
-        console.log(error, "got an error while getting data from database");
+        alert("could not retrieve data from database");
       }
     }
     if (userId) {
@@ -174,21 +163,14 @@ const Diary = ({
 
     const diaryPagesCopy = [...diaryPages];
     const reformedDiaryPages = diaryPagesCopy.map((page, pageIndex) => {
-      let imagesCopy = Object.assign(page.images);
-
-
+      const imagesCopy = Object.assign(page.images);
 
       //saving images
       const imagesReferences = imagesCopy.map((image: Blob, index: number) => {
-
         return `/${userId}/${pageIndex}/image-${index}`;
       })
 
-      console.log(imagesReferences, "images references");
-
-
       const newPage = { text: page.text, images: imagesReferences };
-
       return newPage;
     });
 
@@ -208,20 +190,13 @@ const Diary = ({
       });
     })
 
-
-
-
-
     await setDoc(docRef, {
       diaryName: diaryName,
       username: user.displayName,
       contents: reformedDiaryPages,
     });
 
-    console.log('data were saved into the database')
-
   }
-
 
   /* 
   this use effect handles saving data into the database,

@@ -11,9 +11,7 @@ const App = () => {
 
   const [user, setuser] = useState<User | null>(null)
 
-
   onAuthStateChanged(auth, (logged_user: User | null) => {
-
     if (logged_user) {
       setuser(logged_user)
     }

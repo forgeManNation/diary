@@ -1,25 +1,22 @@
-.geolocationModal{
-    font-family: 'Source Sans Pro', "Courier New", Courier, monospace;
+.geolocationModal {
+  font-family: "Source Sans Pro", "Courier New", Courier, monospace;
 }
 
-.customMarker{
-    margin-left: -25px; /* -x */
-    margin-top: -55px; /* -y */
+.customMarker {
+  margin-left: -25px; /* -x */
+  margin-top: -55px; /* -y */
 }
 
-.mapContainer{
-    width: 100%;
-    height: 40vh;
+.mapContainer {
+  width: 100%;
+  height: 40vh;
 }
 
-
-.gpsLocationErrorMessage{
-    color: rgb(94, 40, 40);    
-
-    margin: 1vh;
+.gpsLocationErrorMessage {
+  color: rgb(94, 40, 40);
+  margin: 1vh;
 }
 
-.checkMarkMapLayerSection{
-    margin-top: 1vh;
+.checkMarkMapLayerSection {
+  margin-top: 1vh;
 }
-

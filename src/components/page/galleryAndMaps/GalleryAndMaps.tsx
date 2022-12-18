@@ -1,9 +1,8 @@
 import React, { useState, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMap, faImage, faMapLocation } from '@fortawesome/free-solid-svg-icons'
+import { faImage, faMapLocation } from '@fortawesome/free-solid-svg-icons'
 import "./gallery.scss"
 import ModalAddGeolocation from "./ModalAddGeolocation"
-import { LatLng } from 'leaflet'
 import { Tooltip } from 'reactstrap'
 
 interface galleryProps {
@@ -42,16 +41,12 @@ const Gallery = (props: galleryProps) => {
     <div>
       <div className='gallery'>
 
-        {/* <i className="bi bi-plus-circle-dotted"></i> */}
-
-
         {images.map((image: Blob, index) => <div className='galleryImageContainer' key={'image' + index}>
           <img alt="gallery item" className='galleryImage' width={"250px"} src={URL.createObjectURL(image)} />
           <span className='galleryImageTape' onClick={() => { removeGalleryItem(index) }}></span>
           <br />
         </div>)
         }
-
 
         {/* for uploading end users files - pictures */}
         <input

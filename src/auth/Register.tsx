@@ -1,10 +1,10 @@
 import React from 'react'
-import { createUserWithEmailAndPassword, auth, updateProfile, signInWithEmailAndPassword, db, doc, setDoc, signInAnonymously } from '../firebase'
+import { createUserWithEmailAndPassword, auth, updateProfile, signInAnonymously } from '../firebase'
 import { useNavigate } from 'react-router-dom'
 import "./authStyles.scss"
-import { faExclamationCircle, faPersonCircleQuestion } from '@fortawesome/free-solid-svg-icons'
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { User, UserCredential } from 'firebase/auth';
+import { UserCredential } from 'firebase/auth';
 import authErrors from "./authErrors.json"
 
 const Register = () => {

@@ -15,7 +15,6 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
   signOut,
-  onAuthStateChanged,
   signInAnonymously,
 } from "firebase/auth";
 

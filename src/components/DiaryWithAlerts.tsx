@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./diary.scss";
 import { Alert } from "reactstrap";
 import { User } from "firebase/auth";
@@ -52,9 +52,9 @@ const DiaryWithAlerts = ({ editMode, user }: Props) => {
   //timer ID -> used for clearing timeout when the data are saved to early
   let changeNameAlerttimerID: ReturnType<typeof setTimeout>;
   function triggerChangeNameAlert() {
-    clearTimeout(changeWrongUserPicID);
+    clearTimeout(changeNameAlerttimerID);
     setchangeNameAlertOpen(true);
-    changeWrongUserPicID = setTimeout(function () {
+    changeNameAlerttimerID = setTimeout(function () {
       setchangeNameAlertOpen(false);
     }, 5000);
   }

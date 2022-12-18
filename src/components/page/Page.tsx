@@ -1,7 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import "./page.scss";
-import { faImage, faFileImage, faPlus, faRectangleAd, faAdd, faRectangleList, faPlusSquare, faMap } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { getDownloadURL, getStorage, ref, listAll } from "firebase/storage";
 import { auth } from "../../firebase"
 import GalleryAndMaps from './galleryAndMaps/GalleryAndMaps';

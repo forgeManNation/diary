@@ -1,16 +1,11 @@
 import React from 'react'
 import { Tooltip } from 'reactstrap'
 import {
-  faFilePen,
-  faFloppyDisk,
   faBookReader,
   faChevronLeft,
   faChevronRight,
-  faCancel,
   faPen,
   faTrash,
-  faMap,
-  faUser,
 
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -145,7 +140,6 @@ const UserControls = ({
             &nbsp; &nbsp;
             <div role='button' onClick={deletePage}>
               <FontAwesomeIcon size='lg' ref={saveIconRef} icon={faTrash} />
-              {/* &nbsp; Delete */}
             </div>
             <Tooltip
               placement='bottom'
