@@ -1,7 +1,7 @@
 # Traveller's diary 
 
 ## About
-Online diary is an online diary where you can add text, pictures and maps on each of your pages. Pages are dynamicaly created by user.  
+Traveller's diary is an online diary where you can add text, pictures and maps on each of your pages. Pages are dynamicaly created by user.  
 
 
 ## Technology specification
