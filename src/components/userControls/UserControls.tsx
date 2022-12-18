@@ -10,7 +10,8 @@ import {
   faPen,
   faTrash,
   faMap,
-  faUser
+  faUser,
+
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useNavigate } from 'react-router-dom'
@@ -54,7 +55,7 @@ const UserControls = ({
   const navigate = useNavigate()
   const disabledChevronRightRef = React.useRef(null)
 
-  function changeEditModeOn () {
+  function changeEditModeOn() {
     if (editMode) {
       navigate('/')
     } else {
@@ -130,16 +131,21 @@ const UserControls = ({
       <div className='userControlsRow'>
         {editMode ? (
           <>
-            <div className='stopEditButton' onClick={changeEditModeOn}>
-              <span role='button'>
-                <FontAwesomeIcon size='lg' icon={faBookReader} />
-                &nbsp; Stop editing
-              </span>
+            <div role="button" onClick={changeEditModeOn}>
+              <FontAwesomeIcon size='lg' ref={editIconRef} icon={faBookReader} />
             </div>
+            <Tooltip
+              placement='bottom'
+              isOpen={editTooltipOpen}
+              target={editIconRef}
+              toggle={() => seteditTooltipOpen(!editTooltipOpen)}
+            >
+              change edit mode
+            </Tooltip>
             &nbsp; &nbsp;
-            <div role='button' id='saveButton' onClick={deletePage}>
+            <div role='button' onClick={deletePage}>
               <FontAwesomeIcon size='lg' ref={saveIconRef} icon={faTrash} />
-              &nbsp; Delete
+              {/* &nbsp; Delete */}
             </div>
             <Tooltip
               placement='bottom'
@@ -172,7 +178,7 @@ const UserControls = ({
       &nbsp; &nbsp;
       <div className='userControlsRow userIconWithPopoverRow'>
         <UserIconWithPopover
-        changeDiaryName = {changeDiaryName}
+          changeDiaryName={changeDiaryName}
           user={user}
           triggerChangeProfileAlert={triggerChangeProfileAlert}
           triggerWrongUserPicUrlAlert={triggerWrongUserPicUrlAlert}

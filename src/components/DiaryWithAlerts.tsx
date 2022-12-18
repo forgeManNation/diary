@@ -14,6 +14,7 @@ const DiaryWithAlerts = ({ editMode, user }: Props) => {
     useState(false);
   const [wrongUserPicAlertOpen, setwrongUserPicAlertOpen] = useState(false);
   const [newPageAlertOpen, setnewPageAlertOpen] = useState(false);
+  const [changeNameAlertOpen, setchangeNameAlertOpen] = useState(false);
 
 
   //timer ID -> used for clearing timeout when the data are saved to early
@@ -48,11 +49,22 @@ const DiaryWithAlerts = ({ editMode, user }: Props) => {
     }, 5000);
   }
 
+  //timer ID -> used for clearing timeout when the data are saved to early
+  let changeNameAlerttimerID: ReturnType<typeof setTimeout>;
+  function triggerChangeNameAlert() {
+    clearTimeout(changeWrongUserPicID);
+    setchangeNameAlertOpen(true);
+    changeWrongUserPicID = setTimeout(function () {
+      setchangeNameAlertOpen(false);
+    }, 5000);
+  }
+
   return (
     <div>
       <Diary
         editMode={editMode}
         user={user}
+        triggerChangeNameAlert={triggerChangeNameAlert}
         triggerCreateNewDiaryPageAlert={triggerCreateNewDiaryPageAlert}
         triggerChangeProfileAlert={triggerChangeProfileAlert}
         triggerWrongUserPicUrlAlert={triggerWrongUserPicUrlAlert}
@@ -81,6 +93,20 @@ const DiaryWithAlerts = ({ editMode, user }: Props) => {
         >
           Profile picture updated!
         </Alert>
+
+
+
+        <Alert
+          className="alert"
+          isOpen={changeNameAlertOpen}
+          toggle={() => {
+            setchangeNameAlertOpen(false);
+          }}
+          color="success"
+        >
+          Succesfully changed diary name!
+        </Alert>
+
 
         <Alert
           className="alert"

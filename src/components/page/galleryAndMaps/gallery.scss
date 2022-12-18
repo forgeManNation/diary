@@ -1,10 +1,9 @@
 .gallery {
-  
-  
   display: flex;
   flex-direction: row;
   overflow: visible;
   flex-wrap: wrap;
+  justify-content: center;
 
   .galleryImageContainer {
     position: relative;

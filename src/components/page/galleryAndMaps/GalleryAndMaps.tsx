@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMap, faImage, faMapLocation} from '@fortawesome/free-solid-svg-icons'
+import { faMap, faImage, faMapLocation } from '@fortawesome/free-solid-svg-icons'
 import "./gallery.scss"
 import ModalAddGeolocation from "./ModalAddGeolocation"
 import { LatLng } from 'leaflet'
+import { Tooltip } from 'reactstrap'
 
 interface galleryProps {
   images: Blob[],
@@ -14,6 +15,11 @@ interface galleryProps {
 const Gallery = (props: galleryProps) => {
 
   const [modalAddGeolocationOpen, setmodalAddGeolocationOpen] = useState(false)
+
+  const [geolocationTooltipOpen, setgeolocationTooltipOpen] = useState(false)
+  const [imageTooltipOpen, setimageTooltipOpen] = useState(false)
+  const geolocationIconRef = useRef(null)
+  const imageIconRef = useRef(null)
 
   function triggerModalAddGeolocationOpen() {
     setmodalAddGeolocationOpen(!modalAddGeolocationOpen)
@@ -36,7 +42,7 @@ const Gallery = (props: galleryProps) => {
     <div>
       <div className='gallery'>
 
-      {/* <i className="bi bi-plus-circle-dotted"></i> */}
+        {/* <i className="bi bi-plus-circle-dotted"></i> */}
 
 
         {images.map((image: Blob, index) => <div className='galleryImageContainer' key={'image' + index}>
@@ -68,25 +74,35 @@ const Gallery = (props: galleryProps) => {
         {props.editMode ?
           <div className="addImagesActionButtons">
             <div className='addImagesActionButtonsInnerContainer'>
-              {/* <button onClick={triggerModalAddGeolocationOpen} className=" btn addAdditionalFeatureButton">
-                <FontAwesomeIcon icon={faMap} />
-                &nbsp;
-                Add map
-              </button> */}
-              {/* <i className="bi bi-map  addAdditionalFeatureButton" onClick={triggerModalAddGeolocationOpen}></i> */}
-              <FontAwesomeIcon className='addAdditionalFeatureButton' icon={faMapLocation}  onClick={triggerModalAddGeolocationOpen}></FontAwesomeIcon>
+              <FontAwesomeIcon ref={geolocationIconRef} className='addAdditionalFeatureButton' icon={faMapLocation} onClick={triggerModalAddGeolocationOpen}></FontAwesomeIcon>
+              <Tooltip
+                placement='bottom'
+                isOpen={geolocationTooltipOpen}
+                target={geolocationIconRef}
+                toggle={() => setgeolocationTooltipOpen(!geolocationTooltipOpen)}
+              >
+                Add your location
+              </Tooltip>
               {/* get Zoom, mapLatLng, markerLatLng  */}
               <ModalAddGeolocation addMap={(newMapBlob) => { props.changeImages([...images, newMapBlob]) }} triggerModalAddGeolocationOpen={triggerModalAddGeolocationOpen} modalAddGeolocationOpen={modalAddGeolocationOpen}></ModalAddGeolocation>
 
+
+              &nbsp;
+              &nbsp;
+              &nbsp;
+
               <label htmlFor="upload">
-                {/* add image icon */}
-                {/* <div className='btn  addAdditionalFeatureButton'>
-                  <FontAwesomeIcon icon={faImage}></FontAwesomeIcon>
-                  &nbsp;
-                  Add picture
-                </div> */}
-                <FontAwesomeIcon icon={faImage} className = "addAdditionalFeatureButton" onClick={triggerModalAddGeolocationOpen}></FontAwesomeIcon>
+                <FontAwesomeIcon ref={imageIconRef} icon={faImage} className="addAdditionalFeatureButton"></FontAwesomeIcon>
               </label>
+
+              <Tooltip
+                placement='bottom'
+                isOpen={imageTooltipOpen}
+                target={imageIconRef}
+                toggle={() => setimageTooltipOpen(!imageTooltipOpen)}
+              >
+                Add an image
+              </Tooltip>
             </div>
           </div>
           :

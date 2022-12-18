@@ -1,11 +1,12 @@
 .userControls {
+  position: fixed;
+  bottom: 6.5vh;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   margin-left: auto;
   margin-right: auto;
-
 }
 
 .userControlsRow {
@@ -23,26 +24,18 @@
   cursor: pointer;
 
   & :hover {
-    color: rgb(56, 115, 235);
-  }
-}
-.userIconWithPopoverRow {
-  #userIcon {
-    // position: fixed;
-    // display: flex;
-    // flex-direction: row;
-    // align-items: center;
-    // justify-content: center;
-    // border-radius: 4px;
-    // margin: 15px;
-    // cursor: pointer;
-    // top: 20px;
-    // right: 55px;
-    // padding: 0.5vh;
+    color: rgb(153, 141, 85);
   }
 
+  border: 1px solid gray;
+}
+.userIconWithPopoverRow {
+  overflow: visible;
+  position: relative;
   .userImage {
     border-radius: 25px;
+    height: 30px;
+    width: auto;
   }
 
   .popoverUsername {

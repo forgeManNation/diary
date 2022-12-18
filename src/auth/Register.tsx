@@ -1,5 +1,5 @@
 import React from 'react'
-import { createUserWithEmailAndPassword, auth, updateProfile, signInWithEmailAndPassword, db, doc, setDoc } from '../firebase'
+import { createUserWithEmailAndPassword, auth, updateProfile, signInWithEmailAndPassword, db, doc, setDoc, signInAnonymously } from '../firebase'
 import { useNavigate } from 'react-router-dom'
 import "./authStyles.scss"
 import { faExclamationCircle, faPersonCircleQuestion } from '@fortawesome/free-solid-svg-icons'
@@ -41,6 +41,10 @@ const Register = () => {
     }
   }
 
+  function signInUserAnonymously() {
+    signInAnonymously(auth)
+  }
+
   return (
     <div className='w-full  d-flex justify-content-center align-content-center flex-wrap authBg'>
       <div className='mainAuthContainer bg-light p-5 pt-4 pb-0'  >
@@ -68,7 +72,7 @@ const Register = () => {
         <div className='authActionButton'>
           <button onClick={register} className="btn btn-outline-dark w-10">Register</button>
           &nbsp;&nbsp;
-          <button className='btn text-dark'>guest login</button>
+          <button className='btn text-dark' onClick={signInUserAnonymously}>guest login</button>
         </div>
 
         {/* if register failed display this message  */}

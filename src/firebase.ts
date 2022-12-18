@@ -16,6 +16,7 @@ import {
   updateProfile,
   signOut,
   onAuthStateChanged,
+  signInAnonymously,
 } from "firebase/auth";
 
 import {
@@ -64,4 +65,5 @@ export {
   uploadBytes,
   getBlob,
   listAll,
+  signInAnonymously,
 };

@@ -4,7 +4,7 @@ import { faImage, faFileImage, faPlus, faRectangleAd, faAdd, faRectangleList, fa
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { getDownloadURL, getStorage, ref, listAll } from "firebase/storage";
 import { auth } from "../../firebase"
-import Images from './images/Gallery';
+import GalleryAndMaps from './galleryAndMaps/GalleryAndMaps';
 
 interface pageProps {
   text: string,
@@ -39,9 +39,7 @@ const Page = (props: pageProps) => {
     )
       .catch(error => {
         console.log(error, 'listAll error');
-      }
-
-      )
+      })
   }, [])
 
 
@@ -59,11 +57,9 @@ const Page = (props: pageProps) => {
 
       <p className="paper secondPaper" >
         <div className="d-flex flex-column">
-          <Images editMode={props.editMode} images={props.images} changeImages={props.changePageImagesValue}></Images>
+          <GalleryAndMaps editMode={props.editMode} images={props.images} changeImages={props.changePageImagesValue}></GalleryAndMaps>
         </div>
       </p>
-
-
     </div>
 
 

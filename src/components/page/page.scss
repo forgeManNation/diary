@@ -2,6 +2,11 @@
 $paper-color: #f1ede9;
 $paper-line: #94acd4;
 
+:root {
+  --diary-height: 695px;
+  --diary-height: 595px;
+  --diary-width: 420px;
+}
 .page {
   width: 100%;
   display: flex;
@@ -18,10 +23,6 @@ $paper-line: #94acd4;
   /* Foreground, Background */
   scrollbar-color: #999 #333;
 }
-// .page::-webkit-scrollbar {
-//   width: 10px; /* Mostly for vertical scrollbars */
-//   height: 10px; /* Mostly for horizontal scrollbars */
-// }
 .page::-webkit-scrollbar-thumb {
   /* Foreground */
   background: #999;
@@ -45,6 +46,11 @@ $paper-line: #94acd4;
   height: 100%;
   position: absolute;
 }
+
+.addImagesActionButtons {
+  width: 100%;
+}
+
 .addImagesActionButtonsInnerContainer {
   display: flex;
   flex-direction: row;
@@ -54,11 +60,11 @@ $paper-line: #94acd4;
 .addAdditionalFeatureButton {
   cursor: pointer;
   border-radius: 26px;
-  background: rgb(224, 223, 223) !important;
-  border: 2px solid rgb(221, 198, 136);
-  color: rgb(66, 65, 63) !important;
+  background: rgb(56, 63, 63);
+  border: 2px solid rgb(157, 155, 149);
+  color: rgb(209, 194, 148) !important;
   padding: 8px;
-  font-family: 'Source Sans Pro', "Courier New", Courier, monospace;
+  font-family: "Source Sans Pro", "Courier New", Courier, monospace;
   margin: 10px;
 }
 
@@ -67,18 +73,19 @@ $paper-line: #94acd4;
   width: 10px;
   margin-top: 20px;
   margin-bottom: 20px;
-  height: 695px;
+  height: var(--diary-height);
+  border-radius: 1px;
 }
 
-
-
 .paper {
+  border-radius: 4px 1px 1px 4px;
+  // border-radius: 4px;
   border: 2px solid rgb(216, 216, 216);
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-  color: black;
+  color: rgb(30, 30, 30);
   margin: 20px;
-  height: 695px;
-  width: 520px;
+  height: var(--diary-height);
+  width: var(--diary-width);
   padding: 30px;
   padding-left: 50px;
   background: repeating-linear-gradient(
@@ -102,23 +109,21 @@ $paper-line: #94acd4;
 }
 
 .secondPaper {
+  border-radius: 1px 4px 4px 1px;
+
   margin-left: 0px;
 }
 
 @media only screen and (max-width: 890px) {
-
-  .bookbinding{
+  .bookbinding {
     background: transparent;
     display: none;
   }
 
-  .paper{
-    margin: 20px!important;
+  .paper {
+    margin: 20px !important;
   }
-
-
 }
-
 
 .text-content {
   white-space: pre-wrap;

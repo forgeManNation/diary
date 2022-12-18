@@ -18,7 +18,8 @@ interface Props {
   user: User;
   triggerWrongUserPicUrlAlert: () => void;
   triggerChangeProfileAlert: () => void;
-  triggerCreateNewDiaryPageAlert: () => void
+  triggerCreateNewDiaryPageAlert: () => void;
+  triggerChangeNameAlert: () => void;
 }
 
 interface page {
@@ -31,11 +32,12 @@ const Diary = ({
   user,
   triggerWrongUserPicUrlAlert,
   triggerChangeProfileAlert,
-  triggerCreateNewDiaryPageAlert
+  triggerCreateNewDiaryPageAlert,
+  triggerChangeNameAlert,
 }: Props) => {
   //all of the diary content is stored in this array
   const [diaryPages, setdiaryPages] = useState<page[]>([]);
-  const [diaryName, setdiaryName] = useState("Diary of smiling pirate");
+  const [diaryName, setdiaryName] = useState("");
   const [activePageIndex, setactivePageIndex] = useState(0);
 
   const userId = user.uid;
@@ -46,8 +48,9 @@ const Diary = ({
     images: [],
   };
 
-  function changeDiaryName (newDiaryName : string) {
+  function changeDiaryName(newDiaryName: string) {
     setdiaryName(newDiaryName)
+    triggerChangeNameAlert()
   }
 
 
@@ -312,18 +315,20 @@ const Diary = ({
       )}
 
 
-      <UserControls
-        changeDiaryName = {changeDiaryName}
-        deletePage={deletePage}
-        createNewPage={createNewPage}
-        changePage={changePage}
-        diaryPagesLength={diaryPages.length}
-        activePageIndex={activePageIndex}
-        editMode={editMode}
-        user={user}
-        triggerChangeProfileAlert={triggerChangeProfileAlert}
-        triggerWrongUserPicUrlAlert={triggerWrongUserPicUrlAlert}
-      ></UserControls>
+      <div className="userControlsSegment">
+        <UserControls
+          changeDiaryName={changeDiaryName}
+          deletePage={deletePage}
+          createNewPage={createNewPage}
+          changePage={changePage}
+          diaryPagesLength={diaryPages.length}
+          activePageIndex={activePageIndex}
+          editMode={editMode}
+          user={user}
+          triggerChangeProfileAlert={triggerChangeProfileAlert}
+          triggerWrongUserPicUrlAlert={triggerWrongUserPicUrlAlert}
+        ></UserControls>
+      </div>
     </div>
   );
 };
