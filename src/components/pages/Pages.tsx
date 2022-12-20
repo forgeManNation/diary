@@ -20,6 +20,7 @@ const Pages = (props: pagesProps) => {
 
   useEffect(() => {
 
+
     // Create a root reference
     const storage = getStorage();
 
@@ -36,8 +37,11 @@ const Pages = (props: pagesProps) => {
     }
     )
       .catch(error => {
-        console.log(error, 'listAll error');
+        //TODO: programm goes to this error when app initializes, make the prevoius
+        //code happen only after authentication
       })
+
+
   }, [])
 
 
@@ -46,18 +50,17 @@ const Pages = (props: pagesProps) => {
 
       <textarea wrap='off' readOnly={!props.editMode} onInput={(e) => {
         props.changePageTextValue(e.currentTarget.value)
-      }} className='pageTextarea paper firstPaper text-content'>
-        {props.text}
+      }} className='pageTextarea paper firstPaper text-content' value={props.text}>
       </textarea>
 
       <div className='bookbinding'>
       </div>
 
-      <p className="paper secondPaper" >
+      <div className="paper secondPaper" >
         <div className="d-flex flex-column">
           <GalleryAndMaps editMode={props.editMode} images={props.images} changeImages={props.changePageImagesValue}></GalleryAndMaps>
         </div>
-      </p>
+      </div>
     </div>
 
 

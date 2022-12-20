@@ -220,7 +220,7 @@ const Diary = ({
     ) {
       const diaryPagesCopy = [...diaryPages];
       diaryPagesCopy.splice(activePageIndex, 1);
-
+      setdiaryPages(diaryPagesCopy)
       if (activePageIndex !== 0) changePage(-1);
       else changePage(1);
     } else if (diaryPages.length <= 1) {
